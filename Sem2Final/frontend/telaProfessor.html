@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Professor - Sistema de Laboratórios ETEC</title>
+
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Google Fonts (Roboto e Roboto Slab) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- CSS Personalizado (agora inclui acessibilidade) -->
+    <link rel="stylesheet" href="telaProfessor.css">
+</head>
+
+<body>
+
+    <!-- VLibras Widget -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho (Estrutura do Admin) -->
+    <header class="cabecalho-inicial p-3 d-flex flex-wrap justify-content-between align-items-center">
+        <!-- Coluna da Esquerda: Logo -->
+        <div class="container-logo d-flex align-items-center">
+            <a id="logoLink" href="https://etecjuliodemesquita.cps.sp.gov.br/"
+                title="Visitar site da ETEC Júlio de Mesquita" aria-label="Abrir site da ETEC Júlio de Mesquita">
+                <img src="https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/143/2024/04/etec_santo_andre.png"
+                    alt="Etec Júlio de Mesquita" class="me-2">
+            </a>
+        </div>
+
+        <!-- Coluna do Meio: Informações da ETEC -->
+        <div class="etec-info flex-grow-1 text-center mx-3 my-2 my-md-0">
+            <strong>ETEC Júlio de Mesquita</strong>
+            <p class="mb-0">Sistema de Laboratórios de Química</p>
+        </div>
+
+        <!-- Coluna da Direita: Usuário e Ações -->
+        <div class="container-usuario d-flex align-items-center flex-wrap justify-content-center justify-content-md-end">
+            <!-- Acessibilidade Dropdown -->
+            <div class="dropdown-acessibilidade me-2">
+                <button class="botao-acessibilidade" id="accessibilityBtn">
+                    Acessibilidade
+                </button>
+                <div class="dropdown-content" id="accessibilityDropdown">
+                    <a href="#" id="toggle-dark-mode"><i class="bi bi-moon-stars-fill"></i>Modo Escuro</a>
+                    <div class="divider"></div>
+                    <span class="dropdown-header">Tamanho da Fonte</span>
+                    <a href="#" id="increase-font"><i class="bi bi-zoom-in"></i>Aumentar Fonte (A+)</a>
+                    <a href="#" id="decrease-font"><i class="bi bi-zoom-out"></i>Diminuir Fonte (A-)</a>
+                    <div class="divider"></div>
+                    <span class="dropdown-header">Daltonismo</span>
+                    <a href="#" data-mode="normal">Padrão</a>
+                    <a href="#" data-mode="protanopia">Protanopia</a>
+                    <a href="#" data-mode="deuteranopia">Deuteranopia</a>
+                    <a href="#" data-mode="tritanopia">Tritanopia</a>
+                </div>
+            </div>
+            <!-- Info do Usuário -->
+            <div class="usuario-info me-3 text-md-end text-center">
+                <strong id="nome-usuario">João Silva</strong>
+                <p class="mb-0" id="tipo-usuario">Professor</p>
+            </div>
+            <!-- Botão Sair -->
+            <button class="botao-sair" id="botaoSair">
+                Sair
+            </button>
+        </div>
+    </header>
+
+    <!-- Barra de navegação (Estrutura do Admin) -->
+    <nav class="barra-navegacao-principal navbar navbar-expand-lg">
+        <div class="container-fluid justify-content-center">
+            <!-- Botão "Sanduíche" para telas pequenas -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Links de navegação -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <div class="navbar-nav">
+                    <a href="#" class="nav-link active" data-target="dashboard">Dashboard</a>
+                    <a href="#" class="nav-link" data-target="novo-agendamento">Novo Agendamento</a>
+                    <a href="#" class="nav-link" data-target="meus-kits">Meus Kits</a>
+                    <a href="#" class="nav-link" data-target="historico">Histórico</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal (Estrutura do Admin) -->
+    <main class="container py-4">
+
+        <!-- SEÇÃO 1: DASHBOARD -->
+        <section id="dashboard" class="conteudo-secao ativo">
+            
+            <!-- Cards de Resumo (Estilo Admin) -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="info-card">
+                        <i class="bi bi-calendar-check"></i>
+                        <div>
+                            <p>Próximas Aulas</p>
+                            <span id="card-proximas-aulas">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="info-card">
+                        <i class="bi bi-check-lg"></i>
+                        <div>
+                            <p>Kits Preparados</p>
+                            <span id="card-kits-preparados">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="info-card">
+                        <i class="bi bi-hourglass-split"></i>
+                        <div>
+                            <p>Aguardando</p>
+                            <span id="card-aguardando">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="info-card">
+                        <i class="bi bi-box-seam"></i>
+                        <div>
+                            <p>Meus Kits</p>
+                            <span id="card-meus-kits">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ações Rápidas (Envolvido em Card) -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Ações Rápidas</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="#" class="card-acao-rapida bg-red" id="acao-novo-agendamento">
+                                <div class="card-acao-rapida-icone"><span>📅</span></div>
+                                <div class="card-acao-rapida-texto">
+                                    <span class="titulo">Novo Agendamento</span>
+                                    <span class="subtitulo">Agendar uso do laboratório</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" class="card-acao-rapida bg-dark-blue" id="acao-criar-kit">
+                                <div class="card-acao-rapida-icone"><span>🧪</span></div>
+                                <div class="card-acao-rapida-texto">
+                                    <span class="titulo">Criar Kit</span>
+                                    <span class="subtitulo">Novo kit de materiais</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" class="card-acao-rapida bg-solid-green" id="acao-ultimo-agendamento">
+                               <div class="card-acao-rapida-icone"><span>🕒</span></div>
+                               <div class="card-acao-rapida-texto">
+                                   <span class="titulo">Último Agendamento</span>
+                                   <span class="subtitulo">Ver detalhes do último agendamento</span>
+                               </div>
+                           </a>
+                       </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Próximas Aulas (Envolvido em Card) -->
+            <div class="card">
+                <div class="card-header">
+                     <h2 class="h4 mb-0">Próximas Aulas Agendadas</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Lista de Aulas (layout de card nativo) -->
+                    <div class="lista-aulas" id="lista-proximas-aulas">
+                        <!-- Conteúdo será injetado pelo JS -->
+                        <p class="text-center p-3">Carregando agendamentos...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: NOVO AGENDAMENTO (MODIFICADA - Tarefa 1 e 4) -->
+        <section id="novo-agendamento" class="conteudo-secao">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Novo Agendamento</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form class="agendamento-form" id="formNovoAgendamento">
+                        
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label for="data" class="form-label">Data</label>
+                                <input type="date" name="data" id="data" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="horario-inicio" class="form-label">Horário Início</label>
+                                <input type="time" name="horario-inicio" id="horario-inicio" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="horario-fim" class="form-label">Horário Fim</label>
+                                <input type="time" name="horario-fim" id="horario-fim" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <fieldset class="mt-4">
+                            <legend class="form-label fs-5">Laboratório</legend>
+                            <div class="row g-3" id="lista-laboratorios-form">
+                                <!-- Laboratórios serão injetados pelo JS -->
+                                <p class="text-center">Carregando laboratórios...</p>
+                            </div>
+                        </fieldset>
+
+                        <!-- MODIFICADO (Tarefas 1 e 4): Seletor de materiais interativo -->
+                        <fieldset class="mt-4">
+                            <legend class="form-label fs-5">Materiais (Tabela Interativa - Tarefa 1)</legend>
+                            
+                            <!-- Opção de selecionar Kit existente (mantida) -->
+                            <div class="mb-3">
+                                <label for="select-kit-existente" class="form-label">Usar um Kit salvo?</label>
+                                <select id="select-kit-existente" class="form-select">
+                                    <option value="">Nenhum (ou selecione um kit para preencher a lista)</option>
+                                    <!-- Kits populados pelo JS -->
+                                </select>
+                            </div>
+
+                            <!-- ADICIONADO: Novo seletor de materiais -->
+                            <div class="row g-3">
+                                <!-- Coluna da Esquerda: Busca e Disponíveis -->
+                                <div class="col-md-6">
+                                    <label for="filtroMateriaisAgendamento" class="form-label">Buscar Materiais Disponíveis</label>
+                                    <input type="text" id="filtroMateriaisAgendamento" class="form-control mb-2" placeholder="Buscar por nome, tipo...">
+                                    <!-- MODIFICADO: Removido estilo inline de borda/padding -->
+                                    <div class="list-group materiais-list-container" id="listaMateriaisDisponiveisAgendamento" style="max-height: 250px; overflow-y: auto;">
+                                        <!-- JS vai popular isso -->
+                                        <p class="text-center text-muted small p-3">Carregando materiais...</p>
+                                    </div>
+                                </div>
+                                <!-- Coluna da Direita: Selecionados -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Materiais Selecionados para esta Aula</label>
+                                    <!-- MODIFICADO: Removido estilo inline de borda/padding -->
+                                    <div class="list-group materiais-list-container" id="listaMateriaisSelecionadosAgendamento" style="min-height: 250px; max-height: 250px; overflow-y: auto;">
+                                        <!-- JS vai popular isso -->
+                                        <p class="text-center text-muted small p-3" id="placeholderSelecionadosAgendamento">Adicione materiais da lista à esquerda.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <!-- FIM DA MODIFICAÇÃO -->
+
+                        <div class="mt-3">
+                            <label for="observacoes" class="form-label">Observações (Título/Descrição da Aula)</label>
+                            <textarea name="observacoes" id="observacoes" rows="4" placeholder="Ex: Aula de Titulação Ácido-Base" class="form-control"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <button type="submit" class="btn btn-custom-confirmar">Confirmar Agendamento</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: MEUS KITS -->
+        <section id="meus-kits" class="conteudo-secao">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Meus Kits de Materiais</h2>
+                    <button class="btn btn-custom" id="abrirModalKitBtn"><i class="bi bi-plus-circle-fill me-2"></i>Novo Kit</button>
+
+                </div>
+                <div class="card-body">
+                    <div class="row g-4" id="lista-meus-kits">
+                        <!-- Kits serão injetados pelo JS -->
+                         <p class="text-center p-3">Carregando kits...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: HISTÓRICO -->
+        <section id="historico" class="conteudo-secao">
+             <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Histórico de Agendamentos</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Experimento</th>
+                                    <th>Laboratório</th>
+                                    <th>Kit</th>
+                                    <th>Data</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-historico">
+                                <!-- Histórico será injetado pelo JS -->
+                                <tr><td colspan="5" class="text-center">Carregando histórico...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+    </main>
+
+    <!-- VLibras JS -->
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- Scripts da Aplicação -->
+    <script src="apiService.js"></script>
+    <script src="telaProfessor.js"></script>
+
+    <!-- Modais -->
+    
+    <!-- NOVO: Modal "Último Agendamento" -->
+    <div class="modal-container" id="modalUltimoAgendamento">
+        <div class="modal-card">
+            <header class="modal-header">
+                <h5 class="modal-title">Detalhes do Último Agendamento</h5>
+                <button type="button" class="btn-close" id="fecharModalUltimoAgendamentoBtn"></button>
+            </header>
+            <div class="modal-body">
+                <div class="detalhes-aula-grupo">
+                    <span class="detalhes-label">Título/Descrição:</span>
+                    <span class="detalhes-valor" id="ultimo-agendamento-titulo"></span>
+                </div>
+                <div class="row g-3 my-2">
+                    <div class="col-md-6">
+                        <span class="detalhes-label">Laboratório:</span>
+                        <span class="detalhes-valor" id="ultimo-agendamento-lab"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="detalhes-label">Data/Horário:</span>
+                        <span class="detalhes-valor" id="ultimo-agendamento-data"></span>
+                    </div>
+                </div>
+                <div class="detalhes-aula-grupo">
+                    <span class="detalhes-label">Kit de Materiais:</span>
+                    <span class="detalhes-valor" id="ultimo-agendamento-kit"></span>
+                </div>
+                <div class="detalhes-aula-grupo">
+                    <span class="detalhes-label">Instruções de Preparo/Observações:</span>
+                    <span class="detalhes-valor" id="ultimo-agendamento-obs"></span>
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="fecharModalUltimoAgendamentoBtn_footer">Fechar</button>
+            </footer>
+        </div>
+    </div>
+
+
+    <!-- MODIFICADO: Modal "Novo kit" (Tarefas 1 e 4) -->
+    <div class="modal-container" id="modalNovoKit">
+        <!-- Aumentado o modal para caber a seleção de itens -->
+        <div class="modal-card modal-lg"> 
+            <header class="modal-header">
+                <h5 class="modal-title">Criar Novo Kit de Materiais</h5>
+                <button type="button" class="btn-close" id="fecharModalKitBtn"></button>
+            </header>
+            <div class="modal-body">
+                <form id="formNovoKit">
+                    <div class="form-group mb-3">
+                        <label for="kit-nome" class="form-label">Nome do Kit</label>
+                        <input type="text" id="kit-nome" class="form-control" placeholder="Ex: Titulação Ácido-Base" required>
+                    </div>
+                    
+                    <!-- REMOVIDO: Textarea de descrição -->
+
+                    <!-- ADICIONADO: Seletor de materiais (Tarefas 1 e 4) -->
+                    <fieldset class="mt-2">
+                        <legend class="form-label fs-6">Materiais do Kit</legend>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="filtroMateriaisKit" class="form-label">Buscar Materiais Disponíveis</label>
+                                <input type="text" id="filtroMateriaisKit" class="form-control mb-2" placeholder="Buscar por nome, tipo...">
+                                <!-- MODIFICADO: Removido estilo inline de borda/padding -->
+                                <div class="list-group materiais-list-container" id="listaMateriaisDisponiveisKit" style="max-height: 250px; overflow-y: auto;">
+                                    <!-- JS vai popular -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Materiais Selecionados</label>
+                                <!-- MODIFICADO: Removido estilo inline de borda/padding -->
+                                <div class="list-group materiais-list-container" id="listaMateriaisSelecionadosKit" style="min-height: 250px; max-height: 250px; overflow-y: auto;">
+                                    <!-- JS vai popular -->
+                                    <p class="text-center text-muted small p-3" id="placeholderSelecionadosKit">Adicione materiais da lista à esquerda.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <footer class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarModalKitBtn">Cancelar</button>
+                <button type="submit" form="formNovoKit" class="btn btn-success">Salvar Kit</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal "Ver Detalhes" (Aula) -->
+    <div class="modal-container" id="modalVerDetalhes">
+        <div class="modal-card">
+            <header class="modal-header">
+                <h5 class="modal-title" id="detalhe-titulo">Detalhes da Aula</h5>
+                <button type="button" class="btn-close" id="fecharModalVerDetalhesBtn"></button>
+            </header>
+            <div class="modal-body">
+                <div class="detalhes-aula-grupo">
+                    <span class="detalhes-label">Título/Descrição:</span>
+                    <span class="detalhes-valor" id="detalhe-titulo-val"></span> <!-- ID corrigido -->
+                </div>
+                <div class="detalhes-aula-grupo">
+                    <span class="detalhes-label">Status:</span>
+                    <span class="detalhes-valor" id="detalhe-status"></span>
+                </div>
+                <div class="row g-3 my-2">
+                    <div class="col-md-6">
+                        <span class="detalhes-label">Turma:</span>
+                        <span class="detalhes-valor" id="detalhe-turma">N/A</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="detalhes-label">Nº de Alunos:</span>
+                        <span class="detalhes-valor" id="detalhe-alunos">N/A</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="detalhes-label">Laboratório:</span>
+                        <span class="detalhes-valor" id="detalhe-lab"></span>
+                    </div>
+                     <div class="col-md-6">
+                        <span class="detalhes-label">Data/Horário:</span>
+                        <span class="detalhes-valor" id="detalhe-data"></span>
+                    </div>
+                </div>
+                <div class="detalhes-aula-grupo">
+                    <span class="detalhes-label">Kit de Materiais:</span>
+                    <span class="detalhes-valor" id="detalhe-kit"></span>
+                </div>
+                 <div class="detalhes-aula-grupo">
+                    <span class="detalhes-label">Observações:</span>
+                    <span class="detalhes-valor" id="detalhe-obs"></span>
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="fecharModalVerDetalhesBtn_footer">Fechar</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal "Editar" (Aula) - (Simplificado/Desativado) -->
+    <div class="modal-container" id="modalEditarAula">
+        <div class="modal-card">
+            <header class="modal-header">
+                <h5 class="modal-title">Editar Agendamento</h5>
+                <button type="button" class="btn-close" id="fecharModalEditarAulaBtn"></button>
+            </header>
+            <div class="modal-body">
+                <p>Função de edição em desenvolvimento. Por favor, cancele e crie um novo agendamento.</p>
+            </div>
+            <footer class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarModalEditarAulaBtn">Fechar</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal "Ver Kit" -->
+    <div class="modal-container" id="modalVerKit">
+         <div class="modal-card">
+            <header class="modal-header">
+                <h5 class="modal-title" id="detalhe-kit-titulo"></h5>
+                <button type="button" class="btn-close" id="fecharModalVerKitBtn"></button>
+            </header>
+            <div class="modal-body">
+                <div class="detalhes-aula-grupo mb-3">
+                    <span class="detalhes-label">Itens e Descrição:</span>
+                    <!-- Usando pre para manter a formatação da textarea -->
+                    <pre class="detalhes-kit-itens-lista" id="detalhe-kit-itens"></pre>
+                </div>
+                <div class="detalhes-aula-grupo">
+                    <span class="detalhes-label">Dados de Uso:</span>
+                    <span class="detalhes-valor" id="detalhe-kit-uso">
+                        Em desenvolvimento.
+                    </span>
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="fecharModalVerKitBtn_footer">Fechar</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- MODIFICADO: Modal "Editar Kit" (Tarefas 1 e 4) -->
+    <div class="modal-container" id="modalEditarKit">
+        <!-- Aumentado o modal para caber a seleção de itens -->
+        <div class="modal-card modal-lg">
+            <header class="modal-header">
+                <h5 class="modal-title">Editar Kit de Materiais</h5>
+                <button type="button" class="btn-close" id="fecharModalEditarKitBtn"></button>
+            </header>
+            <div class="modal-body">
+                <form id="formEditarKit">
+                    <input type="hidden" id="edit-kit-id"> <!-- Campo oculto para o ID -->
+                    <div class="form-group mb-3">
+                        <label for="edit-kit-nome" class="form-label">Nome do Kit</label>
+                        <input type="text" id="edit-kit-nome" name="kit-nome" class="form-control" required>
+                    </div>
+                    
+                    <!-- REMOVIDO: Textarea de descrição -->
+
+                    <!-- ADICIONADO: Seletor de materiais (Tarefas 1 e 4) -->
+                    <fieldset class="mt-2">
+                        <legend class="form-label fs-6">Materiais do Kit</legend>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="filtroMateriaisEditKit" class="form-label">Buscar Materiais Disponíveis</label>
+                                <input type="text" id="filtroMateriaisEditKit" class="form-control mb-2" placeholder="Buscar por nome, tipo...">
+                                <!-- MODIFICADO: Removido estilo inline de borda/padding -->
+                                <div class="list-group materiais-list-container" id="listaMateriaisDisponiveisEditKit" style="max-height: 250px; overflow-y: auto;">
+                                    <!-- JS vai popular -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Materiais Selecionados</label>
+                                <!-- MODIFICADO: Removido estilo inline de borda/padding -->
+                                <div class="list-group materiais-list-container" id="listaMateriaisSelecionadosEditKit" style="min-height: 250px; max-height: 250px; overflow-y: auto;">
+                                    <!-- JS vai popular -->
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <footer class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarModalEditarKitBtn">Cancelar</button>
+                <button type="submit" form="formEditarKit" class="btn btn-success">Salvar Alterações</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- ADICIONADO: Modal de Confirmação de Saída -->
+    <div class="modal-container" id="modalConfirmarSaida">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Saída</h5>
+                <button type="button" class="btn-close" id="fecharModalSaidaBtn"></button>
+            </div>
+            <div class="modal-body">
+                <p>Você tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarSaidaBtn">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmarSaidaBtn">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast/Alerta Global -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="globalToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong class="me-auto" id="toastTitle">Notificação</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+                Mensagem.
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+</html>

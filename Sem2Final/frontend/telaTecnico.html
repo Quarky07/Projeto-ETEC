@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel do Técnico - ETEC</title>
+
+  <!-- Bootstrap CSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Google Fonts (Roboto e Roboto Slab) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- CSS Personalizado -->
+  <link rel="stylesheet" href="telaTecnico.css" />
+</head>
+
+<body>
+  <!-- VLibras Widget -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+
+  <!-- Cabeçalho (Estrutura do Admin) -->
+  <header class="cabecalho-inicial p-3 d-flex flex-wrap justify-content-between align-items-center">
+    <!-- Coluna da Esquerda: Logo -->
+    <div class="container-logo d-flex align-items-center">
+      <a id="logoLink" href="https://etecjuliodemesquita.cps.sp.gov.br/" title="Visitar site da ETEC Júlio de Mesquita"
+        aria-label="Abrir site da ETEC Júlio de Mesquita">
+        <img
+          src="https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/143/2024/04/etec_santo_andre.png"
+          alt="Etec Júlio de Mesquita" class="me-2">
+      </a>
+    </div>
+
+    <!-- Coluna do Meio: Informações da ETEC -->
+    <div class="etec-info flex-grow-1 text-center mx-3 my-2 my-md-0">
+      <strong>ETEC Júlio de Mesquita</strong>
+      <p class="mb-0">Sistema de Laboratórios de Química</p>
+    </div>
+
+    <!-- Coluna da Direita: Usuário e Ações -->
+    <div class="container-usuario d-flex align-items-center flex-wrap justify-content-center justify-content-md-end">
+      <!-- Acessibilidade Dropdown -->
+      <div class="dropdown-acessibilidade me-2">
+        <button class="botao-acessibilidade" id="accessibilityBtn">
+          Acessibilidade
+        </button>
+        <div class="dropdown-content" id="accessibilityDropdown">
+          <a href="#" id="toggle-dark-mode"><i class="bi bi-moon-stars-fill"></i>Modo Escuro</a>
+          <div class="divider"></div>
+          <span class="dropdown-header">Tamanho da Fonte</span>
+          <a href="#" id="increase-font"><i class="bi bi-zoom-in"></i>Aumentar Fonte (A+)</a>
+          <a href="#" id="decrease-font"><i class="bi bi-zoom-out"></i>Diminuir Fonte (A-)</a>
+          <div class="divider"></div>
+          <span class="dropdown-header">Daltonismo</span>
+          <a href="#" data-mode="normal">Padrão</a>
+          <a href="#" data-mode="protanopia">Protanopia</a>
+          <a href="#" data-mode="deuteranopia">Deuteranopia</a>
+          <a href="#" data-mode="tritanopia">Tritanopia</a>
+        </div>
+      </div>
+      <!-- Info do Usuário -->
+      <div class="usuario-info me-3 text-md-end text-center">
+        <strong id="nome-usuario">Ernesto Silva</strong>
+        <p class="mb-0" id="tipo-usuario">Técnico</p>
+      </div>
+      <!-- Botão Sair -->
+      <button class="botao-sair" id="botaoSair">
+        Sair
+      </button>
+    </div>
+  </header>
+  
+  <!-- Barra de navegação (Estrutura do Admin) -->
+  <nav class="barra-navegacao-principal navbar navbar-expand-lg">
+    <div class="container-fluid justify-content-center">
+      <!-- Botão "Sanduíche" para telas pequenas -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Links de navegação -->
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <div class="navbar-nav">
+          <!-- data-targets atualizados para nomes descritivos -->
+          <a href="#" class="nav-link active" data-target="agendamentos">Agendamentos Pendentes</a>
+          <a href="#" class="nav-link" data-target="estoque">Controle de Estoque</a>
+          <a href="#" class="nav-link" data-target="historico">Histórico</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Conteúdo Principal (Estrutura do Admin) -->
+  <main class="container py-4">
+
+    <!-- SEÇÃO 1: AGENDAMENTOS PENDENTES -->
+    <section id="agendamentos" class="conteudo-secao ativo">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="h4 mb-0">Agendamentos Pendentes</h2>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Professor</th>
+                  <th>Data</th>
+                  <th>Horário</th>
+                  <th>Laboratório</th>
+                  <th>Kit</th>
+                  <th class="text-center">Analisar</th>
+                </tr>
+              </thead>
+              <tbody id="lista-agendamentos-tbody">
+                <!-- Conteúdo injetado pelo JS -->
+                <tr><td colspan="6" data-label="Aviso" class="text-center">Carregando agendamentos...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 2: CONTROLE DE ESTOQUE (MODIFICADA) -->
+    <section id="estoque" class="conteudo-secao">
+      <div class="card">
+        <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+          <h2 class="h4 mb-0 me-2">Controle de Estoque</h2>
+          <div class="d-flex gap-2 mt-2 mt-md-0">
+            <button class="btn btn-outline-warning" id="btnDesfazerEstoque">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>Desfazer
+            </button>
+            <button class="btn btn-custom" id="abrirModalItemBtn">
+                <i class="bi bi-plus-circle-fill me-2"></i>Adicionar
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+            
+          <div class="mb-3 px-3">
+              <label for="filtroEstoque" class="form-label">Buscar no Estoque</label>
+              <input type="text" id="filtroEstoque" class="form-control" placeholder="Digite o nome do item para filtrar...">
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Descrição</th>
+                  <th>Tipo</th>
+                  <th class="text-center">Quantidade</th>
+                  <th>Localização</th>
+                  <!-- ADICIONADO: Nova coluna de Ações -->
+                  <th class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="lista-estoque-tbody">
+                 <!-- Conteúdo injetado pelo JS -->
+                 <!-- ATUALIZADO: Colspan -->
+                <tr><td colspan="6" data-label="Aviso" class="text-center">Carregando estoque...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 3: HISTÓRICO -->
+    <section id="historico" class="conteudo-secao">
+      <div class="card">
+        <div class="card-header">
+           <h2 class="h4 mb-0">Histórico de Agendamentos</h2>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Professor</th>
+                  <th>Data</th>
+                  <th>Laboratório</th>
+                  <th class="text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="lista-historico-tbody">
+                 <!-- Conteúdo injetado pelo JS -->
+                <tr><td colspan="4" data-label="Aviso" class="text-center">Carregando histórico...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Adicionar Item -->
+  <div class="modal-container" id="itemModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h5 class="modal-title">Adicionar Novo Item</h5>
+        <button type="button" class="btn-close" id="fecharModalItemBtn"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formItem">
+          <div class="form-group mb-3">
+            <label for="itemNome" class="form-label">Item</label>
+            <input type="text" class="form-control" id="itemNome" required />
+          </div>
+          <div class="form-group mb-3">
+            <label for="itemDesc" class="form-label">Descrição</label>
+            <input type="text" class="form-control" id="itemDesc" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="itemLocal" class="form-label">Localização</label>
+            <select class="form-select" id="itemLocal" required>
+              <option value="" disabled selected>Selecione um local...</option>
+              <option value="Lab. 1 - Bancada">Lab. 1 - Bancada</option>
+              <option value="Lab. 2 - Bancada">Lab. 2 - Bancada</option>
+              <option value="Lab. 3 - Bancada">Lab. 3 - Bancada</option>
+              <option value="Armário 7">Armário 7</option>
+              <option value="Estoque">Estoque</option>
+              <option value="Almoxarifado Central">Almoxarifado Central</option>
+            </select>
+          </div>
+           
+           <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                  <label for="itemTipoMaterial" class="form-label">Tipo de Material</label>
+                  <select class="form-select" id="itemTipoMaterial" required>
+                      <option value="" selected disabled>Selecione...</option>
+                      <option value="equipamento">Equipamento</option>
+                      <option value="vidraria">Vidraria</option>
+                      <option value="reagente">Reagente</option>
+                      <option value="consumivel">Consumível</option>
+                  </select>
+              </div>
+              <div class="col-md-6">
+                  <label for="itemClassificacao" class="form-label">Classificação (Uso)</label>
+                  <select class="form-select" id="itemClassificacao" required>
+                      <option value="" selected disabled>Selecione...</option>
+                      <option value="ferramenta">Ferramenta (Reutilizável)</option>
+                      <option value="consumivel">Consumível (Baixa no estoque)</option>
+                  </select>
+              </div>
+          </div>
+          
+          <div class="row g-2">
+              <div class="col-md-6">
+                  <label for="itemQuantidade" class="form-label">Quantidade</label>
+                  <input type="number" class="form-control" id="itemQuantidade" step="0.01" min="0" required placeholder="Ex: 10 ou 500.5">
+              </div>
+              <div class="col-md-6">
+                  <label for="itemUnidade" class="form-label">Unidade</label>
+                  <input type="text" class="form-control" id="itemUnidade" required placeholder="Ex: UN, g, ml, caixas">
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelarModalItemBtn">
+          Cancelar
+        </button>
+        <button type="submit" form="formItem" class="btn btn-success">
+          Adicionar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Analisar Agendamento -->
+  <div class="modal-container" id="analisarModal">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h5 class="modal-title">Analisar Agendamento</h5>
+        <button type="button" class="btn-close" id="fecharModalAnalisarBtn"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <span class="detalhes-label">Professor:</span>
+            <span class="detalhes-valor" id="detalhe-professor"></span>
+          </div>
+           <div class="col-md-6">
+            <span class="detalhes-label">Laboratório e Data:</span>
+            <span class="detalhes-valor" id="detalhe-lab-data"></span>
+          </div>
+          <div class="col-md-6">
+            <span class="detalhes-label">Kit Solicitado:</span>
+            <span class="detalhes-valor" id="detalhe-kit-nome"></span>
+          </div>
+          <div class="col-md-6">
+            <span class="detalhes-label">Observações do Professor:</span>
+            <span class="detalhes-valor" id="detalhe-observacoes"></span>
+          </div>
+        </div>
+        
+        <div class="detalhes-aula-grupo">
+          <span class="detalhes-label">Itens Solicitados e Preparo (Tarefa 4)</span>
+          <form id="formPreparoSolucoes">
+            <ul id="lista-materiais-solicitados" class="list-group">
+              <!-- Materiais serão injetados pelo JS -->
+            </ul>
+          </form>
+        </div>
+        
+      </div>
+      <div class="modal-footer justify-content-between">
+        <div>
+          <button type="button" class="btn btn-success" id="btnConfirmarAnalise" data-id="">
+            <i class="bi bi-check-lg me-2"></i>Confirmar
+          </button>
+          <button type="button" class="btn btn-danger" id="btnCancelarAnalise" data-id="">
+            <i class="bi bi-x-lg me-2"></i>Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação de Saída -->
+  <div class="modal-container" id="modalConfirmarSaida">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Saída</h5>
+        <button type="button" class="btn-close" id="fecharModalSaidaBtn"></button>
+      </div>
+      <div class="modal-body">
+        <p>Você tem certeza que deseja sair do sistema?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelarSaidaBtn">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" id="confirmarSaidaBtn">
+          Sair
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ADICIONADO: Modal de Confirmação de Exclusão de Item -->
+  <div class="modal-container" id="modalConfirmarExclusaoItem">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Exclusão</h5>
+        <button type="button" class="btn-close" id="fecharModalExcluirItemBtn"></button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelarExcluirItemBtn">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" id="confirmarExcluirItemBtn" data-id="">
+          Confirmar Exclusão
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast/Alerta Global -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="globalToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <strong class="me-auto" id="toastTitle">Notificação</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastBody">
+            Mensagem.
+        </div>
+    </div>
+  </div>
+
+  <!-- VLibras JS -->
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <!-- REMOVIDO: O script abaixo foi movido para telaTecnico.js para evitar duplicação -->
+  <!--
+  <script>
+    new window.VLibras.Widget("https://vlibras.gov.br/app");
+  </script>
+  -->
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+  <!-- Scripts da Aplicação -->
+  <!-- apiService.js deve ser carregado antes de telaTecnico.js -->
+  <script src="apiService.js"></script>
+  <script src="telaTecnico.js"></script>
+
+</body>
+</html>

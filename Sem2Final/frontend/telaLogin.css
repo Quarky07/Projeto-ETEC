@@ -1,0 +1,407 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* CORRIGIDO: Cores atualizadas para a identidade visual do CPS/ETEC */
+    --bg-1: #B20000; /* Vermelho principal (usado no admin) */
+    --bg-2: #7E0000; /* Tom mais escuro para gradiente */
+    --accent-1: #D32719; /* Vermelho mais vibrante para botões */
+    --accent-2: #F95B4D; /* Sombra/hover do botão */
+    --text: #ffffff;
+    --muted: rgba(255,255,255,0.75);
+    --radius: 20px;
+    
+    /* CORRIGIDO: Fonte alterada de 'Inter' para 'Roboto' */
+    font-family: 'Roboto', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Helvetica Neue", sans-serif;
+}
+
+body {
+    font-family: inherit;
+    background: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* empilha barra do governo em cima e conteúdo abaixo */
+    align-items: center;
+    justify-content: flex-start; /* conteúdo começa do topo, abaixo da barra */
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 550px;
+}
+
+.brand-image {
+    display: block;
+    margin: 0 auto 16px auto;
+    max-width: 170px;
+    width: 100%;
+    height: auto;
+}
+
+.brand-images-top .brand-image {
+    margin: 0;
+    /* ATUALIZADO: Aumentando altura para melhor visualização */
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-images-top .brand-image[alt="Centro Paula Souza"] {
+    /* Esta regra não é mais necessária, a altura já controla o balanceamento */
+}
+
+.brand-images-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* ATUALIZADO: Aumentando o espaço entre os logos */
+    gap: 25px;
+    margin-bottom: 16px;
+    height: 70px; /* Ajustado para nova altura */
+}
+
+.brand-image.bottom {
+    margin: 24px auto 0 auto;
+    max-width: 160px;
+}
+
+.page-titles {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* CORRIGIDO: Títulos usando 'Roboto Slab' */
+.title-main,
+.title-medium,
+.login-header h1,
+.login-header h2 {
+    font-family: 'Roboto Slab', serif;
+}
+
+
+.title-main {
+    font-size: 22px;
+    font-weight: 800;
+    color: #000000;
+}
+
+.title-medium {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    margin-top: 2px;
+}
+
+.title-sub {
+    font-size: 13px;
+    color: #000000;
+    margin-top: 4px;
+}
+
+.login-card {
+    background: linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    border-radius: var(--radius);
+    padding: 28px 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-header h1 {
+    color: var(--text);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.login-header h2 {
+    color: var(--text);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.login-header p {
+    color: var(--muted);
+    font-size: 1rem;
+}
+
+.login-form {
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 14px;
+}
+
+.input-group label {
+    display: block;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 16px 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    font-size: 15px;
+    transition: box-shadow .18s ease, border-color .18s ease, transform .06s ease;
+    background: rgba(0,0,0,0.2);
+    color: var(--text);
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: rgba(255,80,80,0.65);
+    background: rgba(0,0,0,0.25);
+    box-shadow: 0 6px 22px rgba(255,60,60,0.12);
+    transform: translateY(-1px);
+}
+
+.account-type-select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    font-size: 15px;
+    transition: box-shadow .18s ease, border-color .18s ease, transform .06s ease;
+    background: rgba(0,0,0,0.2);
+    color: var(--text);
+    cursor: pointer;
+    appearance: none;
+}
+
+.account-type-select:focus {
+    outline: none;
+    border-color: rgba(255,80,80,0.65);
+    background: rgba(0,0,0,0.25);
+    box-shadow: 0 6px 22px rgba(255,60,60,0.12);
+    transform: translateY(-1px);
+}
+
+.account-type-select:hover {
+    border-color: rgba(255,80,80,0.65);
+}
+
+option {
+    background: var(--bg-2);
+    color: var(--text);
+}
+
+option:checked,
+option:hover {
+    background: var(--bg-1);
+    color: var(--text);
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.remember-me input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+    background: rgba(0,0,0,0.2);
+}
+
+.remember-me input[type="checkbox"]:checked + .checkmark {
+    background: rgba(0,0,0,0.35);
+    border-color: rgba(255,80,80,0.65);
+}
+
+.remember-me input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    color: #ffffff;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.forgot-password {
+    color: var(--accent-2);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
+.login-button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    color: #ffffff;
+    border: 0;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    box-shadow: 0 8px 26px rgba(255,80,80,0.18);
+}
+
+.login-button:hover {
+    transform: translateY(-1px);
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 25px;
+        margin: 10px;
+    }
+    
+    .login-header h1 {
+        font-size: 2rem;
+    }
+    
+    .remember-forgot {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .brand-images-top {
+        gap: 15px;
+    }
+    
+    .brand-images-top .brand-image {
+        max-width: 100px;
+    }
+    
+    .brand-images-top .brand-image[alt="Centro Paula Souza"] {
+        max-width: 180px;
+    }
+    
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.input-group input:focus {
+    transform: translateY(-1px);
+}
+
+.login-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.login-button:disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.back-login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-login p {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.back-login a {
+    color: var(--accent-2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.back-login a:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
+.error-message {
+    background: rgba(255, 59, 59, 0.1);
+    border: 1px solid var(--accent-1);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* ADICIONADO: Classe para mensagem de sucesso */
+.error-message.success-message {
+    background: rgba(40, 167, 69, 0.1);
+    border-color: #28a745;
+}
+
+.error-message p {
+    color: #ffffff;
+    font-size: 0.9rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Ajustes para a barra do governo */
+.govsp-topo {
+    width: 100%;
+    position: static; /* rola junto com a página */
+}
+
+body {
+    padding-top: 0; /* sem compensação, já que não está mais fixa */
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 0;
+    }
+}

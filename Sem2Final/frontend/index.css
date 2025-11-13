@@ -1,0 +1,101 @@
+/* Estilos gerais */
+img[sizes="auto" i], img[sizes^="auto," i] {
+    contain-intrinsic-size: 3000px 1500px;
+}
+
+/* Estilos do tema */
+.wp-block-button__link {
+    color: #fff;
+    background-color: #32373c;
+    border-radius: 9999px;
+    box-shadow: none;
+    text-decoration: none;
+    padding: calc(.667em + 2px) calc(1.333em + 2px);
+    font-size: 1.125em;
+}
+
+.wp-block-file__button {
+    background: #32373c;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Grid de botões */
+.wp-block-cps-grid-botoes {
+    color: #fff;
+    padding: 2px;
+    width: 100%;
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-around;
+}
+
+.wp-block-cps-grid-botoes .icon-box {
+    position: relative;
+    background-color: #f5f5f5;
+    padding: 8px;
+    flex: 0 0 136px;
+    margin-bottom: 16px;
+    height: 210px;
+    max-width: 136px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color ease-in-out .2s;
+}
+
+.wp-block-cps-grid-botoes .icon-box:hover {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, .2), 0px 10px 10px 0px rgba(0, 0, 0, .1);
+}
+
+.wp-block-cps-grid-botoes .icon-box:after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 0px;
+    height: 4px;
+    background-color: #b20000;
+}
+
+.wp-block-cps-grid-botoes .icon-box:hover:after {
+    width: 100%;
+    animation: linha .3s;
+}
+
+/* Animações */
+@keyframes linha {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Ícones e títulos */
+.wp-block-cps-grid-botoes svg {
+    color: #00c1cf;
+    font-size: 40px;
+}
+
+.wp-block-cps-grid-botoes h3,
+.wp-block-cps-grid-botoes h3.block-editor-rich-text__editable {
+    color: #005b6d;
+    font-size: 16px;
+    word-break: break-word;
+    font-weight: 600;
+    font-family: "Open Sans";
+}
+
+/* Layout responsivo */
+.wp-container-core-columns-is-layout-9d6595d7 {
+    flex-wrap: nowrap;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+    #feed-instagram,
+    #feed-youtube {
+        display: none;
+    }
+}

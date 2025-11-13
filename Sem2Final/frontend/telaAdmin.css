@@ -1,0 +1,782 @@
+/* --- GERAL E RESET --- */
+:root {
+    --font-size-base: 1rem; /* 16px */
+}
+html {
+    font-size: var(--font-size-base);
+}
+body {
+    /* 'Roboto' (sans-serif) é a fonte padrão para o corpo do texto */
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+p {
+    margin: 0;
+}
+
+/* --- FONTES --- */
+/* 'Roboto Slab' (serif) é aplicada apenas em títulos e destaques */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.card-header,
+.info-card span,
+.etec-info strong,
+.usuario-info strong {
+    font-family: 'Roboto Slab', serif;
+}
+
+
+/* Regras de layout removidas, agora controladas pelas classes 'd-flex', 'p-3', etc. no HTML */
+.cabecalho-inicial {
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    position: relative; /* Adicionado para posicionamento absoluto do filho */
+    justify-content: flex-start !important; /* Sobrescreve o justify-content-between do HTML */
+}
+
+.container-logo a {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    line-height: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: none !important; /* remove transições no link */
+}
+
+.container-logo img {
+    display: block;
+    height: 50px; /* mantém o tamanho definido */
+    width: auto;
+    object-fit: contain;
+    transition: none !important; /* remove qualquer animação */
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+}
+
+/* REGRA MAIS IMPORTANTE: Removido 'position: absolute' que quebrava o layout */
+.etec-info{
+    text-align: center;
+    /* CORREÇÃO: Posicionamento absoluto para centralizar na página */
+    position: absolute;
+    left: 50%;
+    top: 50%; /* ADICIONADO */
+    transform: translate(-50%, -50%); /* ATUALIZADO */
+    width: auto;
+    flex-grow: 0 !important; /* Sobrescreve o flex-grow-1 do HTML */
+
+    /* Novo: Inverte a ordem dos filhos (p e strong) */
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.usuario-info {
+    text-align: center;
+}
+
+/* CORREÇÃO: Força a margem e o display para corrigir alinhamento */
+.etec-info strong {
+    display: block; /* Garante que o strong seja um bloco */
+    margin-bottom: 0;
+}
+
+.etec-info p, .usuario-info p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0; /* Adicionado para garantir alinhamento */
+}
+
+.botao-sair {
+    background-color: #D32719;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Regras de layout removidas, 'd-flex' etc. estão no HTML */
+.container-usuario,
+.container-usuario .dropdown-acessibilidade,
+.container-usuario .botao-acessibilidade,
+#botaoSair {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+/* NOVO: Garante que o container do usuário seja empurrado para a direita */
+.container-usuario {
+    margin-left: auto;
+}
+
+.botao-sair:hover {
+    background-color: #B20000;
+}
+
+/* --- ACESSIBILIDADE --- */
+.dropdown-acessibilidade {
+    position: relative;
+    display: inline-block;
+}
+
+.botao-acessibilidade {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #6c757d;
+    transition: background-color 0.3s;
+}
+.botao-acessibilidade:hover {
+    background-color: #f4f4f4;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%; /* ATUALIZADO: para 'top: 50px' */
+    margin-top: 5px; /* ADICIONADO */
+    background-color: #ffffff;
+    min-width: 240px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000; /* Aumentado */
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    border: 1px solid #dee2e6;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    white-space: normal; /* CORRIGIDO: Permite quebra de linha */
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-content .divider {
+    height: 1px;
+    margin: .5rem 0;
+    overflow: hidden;
+    background-color: #e9ecef;
+}
+
+.dropdown-content .dropdown-header {
+    display: block;
+    padding: .5rem 1rem;
+    margin-bottom: 0;
+    font-size: .875rem;
+    color: #6c757d;
+    white-space: normal; /* CORRIGIDO: Permite quebra de linha */
+}
+
+.dropdown-content i {
+    margin-right: 0.75rem;
+    width: 16px;
+}
+
+/* --- BARRA DE NAVEGAÇÃO PRINCIPAL (ATUALIZADO) --- */
+.barra-navegacao-principal {
+    background-color: #B20000;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Remove o padding vertical da navbar para os links preencherem o espaço */
+.barra-navegacao-principal.navbar {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Regra 'ul' removida, .navbar-nav cuida disso */
+
+/* Seletor atualizado para .nav-link do Bootstrap */
+.barra-navegacao-principal .nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 18px 40px;
+    display: block;
+    font-weight: 400;
+    transition: background-color 0.3s; /* Transição apenas no background */
+    border-bottom: 5px solid transparent; /* Aumentado para 5px */
+    position: relative; /* Para o ::after */
+}
+
+/* ::after para cobrir a borda no hover */
+.barra-navegacao-principal .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; /* Ajustado para -5px */
+    left: 0;
+    right: 0;
+    height: 5px; /* Ajustado para 5px */
+    background-color: transparent; /* Começa invisível */
+    transition: background-color 0.3s;
+}
+
+.barra-navegacao-principal .nav-link:hover {
+    background-color: #7E0000;
+    color: white;
+}
+
+/* No hover, o ::after também fica da cor de fundo */
+.barra-navegacao-principal .nav-link:hover::after {
+    background-color: #7E0000;
+}
+
+.barra-navegacao-principal .nav-link.active {
+    background-color: #7E0000;
+    border-bottom: 5px solid #7E0000; /* Aumentado para 5px */
+    color: white;
+}
+
+
+/* --- CONTEÚDO PRINCIPAL --- */
+/* Regra .container removida, o Bootstrap .py-4 cuida do espaçamento vertical */
+.conteudo-secao {
+    display: none;
+}
+.conteudo-secao.ativo {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out; /* ADICIONADO: Animação suave */
+}
+
+/* ADICIONADO: Animação */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- CARDS DE RESUMO (DASHBOARD) --- */
+/* Bloco .container-cards-info removido, o Bootstrap .row.g-4 cuida do layout */
+
+.info-card {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%; /* Garante que os cards na mesma linha tenham a mesma altura */
+}
+.info-card i {
+    font-size: 2.5rem;
+    color: #a40000;
+}
+.info-card p {
+    font-size: 1rem;
+    color: #6c757d;
+}
+.info-card span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* --- CARD PRINCIPAL E TABELAS --- */
+.card {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: none;
+    overflow: hidden; /* Garante que a tabela não ultrapasse as bordas arredondadas */
+}
+.card-header {
+    background-color: #f8f9fa;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 500;
+}
+.card-body {
+    padding: 0; /* ATUALIZADO: Removido padding para .table-responsive */
+}
+
+/* ADICIONADO: Padding responsivo para card-body */
+.card-body.p-0.p-md-3 {
+    padding: 0 !important;
+}
+@media (min-width: 768px) {
+    .card-body.p-0.p-md-3 {
+        padding: 1rem !important; /* Bootstrap .p-3 é 1rem */
+    }
+}
+
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+}
+.table thead th {
+    padding: 1rem 1.5rem;
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    text-align: left;
+    font-weight: 500;
+    color: #495057;
+}
+.table td, .table th {
+    padding: 1rem 1.5rem;
+    vertical-align: middle;
+}
+.table tbody tr {
+    border-top: 1px solid #dee2e6;
+}
+
+/* * ATUALIZAÇÃO (MODO CLARO): 
+ * Corrigindo especificidade do Bootstrap e mudando cor da fonte para branco.
+ */
+.table-hover > tbody > tr:hover {
+    --bs-table-hover-bg: rgba(0,0,0,.075);
+    /* color: white;  REMOVIDO: Deixa o bootstrap cuidar disso */
+}
+.table tbody tr:nth-of-type(even) {
+    background-color: rgba(0,0,0,.03);
+}
+
+/* --- BOTÕES --- */
+.btn-custom {
+    background-color: #C41E3A;
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    background-color: #a40000;
+    color: white;
+}
+/* .btn-sm já existe no Bootstrap, mas mantemos para garantir */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: .875rem;
+}
+/* Estilos de botões outline já existem no Bootstrap, estas regras são redundantes mas inofensivas */
+.btn-outline-primary { color: #0d6efd; border-color: #0d6efd; }
+.btn-outline-primary:hover { background-color: #0d6efd; color: white;}
+.btn-outline-danger { color: #dc3545; border-color: #dc3545; }
+.btn-outline-danger:hover { background-color: #dc3545; color: white;}
+
+
+/* --- MODAL DE CADASTRO --- */
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040; /* ATUALIZADO: Z-index padrão */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.modal-container.visivel {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-card {
+    background-color: white;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 500px;
+    transform: translateY(-30px);
+    transition: transform 0.3s ease;
+    z-index: 1050; /* Acima do overlay */
+    max-height: 90vh; /* ADICIONADO: Limite de altura */
+    display: flex; /* ADICIONADO: Para scroll interno */
+    flex-direction: column; /* ADICIONADO */
+}
+.modal-container.visivel .modal-card {
+    transform: translateY(0);
+}
+.modal-header, .modal-footer {
+    padding: 1rem 1.5rem;
+    flex-shrink: 0; /* ADICIONADO */
+}
+.modal-body {
+    padding: 1.5rem; /* ATUALIZADO */
+    overflow-y: auto; /* ADICIONADO: Scroll só no body */
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6;
+}
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+.btn-close {
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    border: 0;
+    border-radius: .25rem;
+    opacity: .5;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+/* .form-group foi removido (Bootstrap mb-3 faz o trabalho) */
+/* .form-control é do Bootstrap */
+/* .btn é do Bootstrap */
+.btn-secondary { background-color: #6c757d; color: white; }
+.btn-success { background-color: #198754; color: white; }
+
+/* --- MODO ESCURO --- */
+body.dark-mode {
+    background-color: #212529;
+    color: #dee2e6;
+}
+.dark-mode .cabecalho-inicial,
+.dark-mode .card,
+.dark-mode .info-card,
+.dark-mode .modal-card,
+.dark-mode .dropdown-content {
+    background-color: #343a40;
+    color: #dee2e6;
+    border-color: #495057;
+}
+/* ATUALIZADO: Filtro para logos */
+.dark-mode .container-logo img {
+    filter: grayscale(1) brightness(100); /* Inverte cores e aumenta brilho */
+}
+
+.dark-mode .etec-info p,
+.dark-mode .usuario-info p,
+.dark-mode .info-card p,
+.dark-mode .botao-acessibilidade {
+    color: #adb5bd;
+    border-color: #6c757d;
+}
+.dark-mode .info-card span, .dark-mode .info-card i, .dark-mode .h4,
+.dark-mode .etec-info strong, .dark-mode .usuario-info strong {
+    color: #f8f9fa;
+}
+.dark-mode .card-header {
+    background-color: #495057;
+    border-bottom-color: #6c757d;
+}
+
+/* ATUALIZADO: Sobrescreve variáveis do Bootstrap para tabelas no modo escuro */
+.dark-mode .table {
+    color: #dee2e6; /* Fallback */
+    --bs-table-color: #dee2e6; /* CORREÇÃO: Define a variável de cor do texto */
+    --bs-table-bg: #343a40; /* Fundo base da tabela */
+    --bs-table-border-color: #495057; /* Cor da borda */
+    --bs-table-striped-bg: rgba(255, 255, 255, .05); /* Cor da linha listrada */
+    --bs-table-hover-bg: rgba(255, 255, 255, .075); /* Cor do hover */
+}
+
+/* * ATUALIZAÇÃO (MODO ESCURO): 
+ * Força o texto a ficar branco puro no hover para legibilidade.
+ * Alveja o 'td' (célula) para maior especificidade.
+ */
+.dark-mode .table-hover > tbody > tr:hover td {
+    color: #ffffff !important; 
+}
+
+
+.dark-mode .table thead th {
+    /* background-color: #495057;  REMOVIDO: Deixa o Bootstrap cuidar */
+    border-color: #6c757d;
+    color: #f8f9fa;
+}
+
+/* Regra antiga removida, pois .dark-mode .table já define o fundo */
+.dark-mode .table tbody tr {
+    border-color: var(--bs-table-border-color); /* Apenas define a cor da borda */
+}
+
+/* Regra antiga removida, pois .dark-mode .table define --bs-table-hover-bg */
+/*
+.dark-mode .table-hover > tbody > tr:hover {
+     --bs-table-hover-bg: rgba(255, 255, 255, .075);
+}
+*/
+
+/* ATUALIZADO: Usa a variável --bs-table-striped-bg para listrar */
+.dark-mode .table tbody tr:nth-of-type(even) {
+    background-color: var(--bs-table-striped-bg);
+}
+
+/* ATUALIZADO: Estilo para inputs e selects dentro de modais no modo escuro */
+.dark-mode .modal-card .form-control,
+.dark-mode .modal-card .form-select { /* Adicionado .form-select */
+    background-color: #495057;
+    color: #fff;
+    border-color: #6c757d;
+}
+.dark-mode .modal-card .form-control:focus,
+.dark-mode .modal-card .form-select:focus {
+    background-color: #495057;
+    color: #fff;
+    border-color: #C41E3A; /* Destaque no foco */
+    box-shadow: 0 0 0 0.25rem rgba(196, 30, 58, 0.25); /* Destaque no foco */
+}
+.dark-mode .modal-header,
+.dark-mode .modal-footer {
+    border-color: #6c757d;
+}
+.dark-mode .dropdown-content a {
+    color: #dee2e6;
+}
+.dark-mode .dropdown-content a:hover {
+    background-color: #495057;
+}
+.dark-mode .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Barra de destaque branca para alto contraste no modo escuro */
+body.dark-mode .barra-navegacao-principal .nav-link.active {
+    border-bottom-color: #ffffff;
+}
+
+
+/* --- Ajustes de Hover para Daltonismo --- */
+
+/* Remove o fundo do hover e adiciona sublinhado branco para modos de daltonismo */
+body.protanopia .table-hover > tbody > tr:hover,
+body.deuteranopia .table-hover > tbody > tr:hover,
+body.tritanopia .table-hover > tbody > tr:hover,
+body.dark-mode.protanopia .table-hover > tbody > tr:hover,
+body.dark-mode.deuteranopia .table-hover > tbody > tr:hover,
+body.dark-mode.tritanopia .table-hover > tbody > tr:hover {
+    --bs-table-hover-bg: transparent; /* Remove o fundo do hover do Bootstrap */
+    background-color: transparent !important; /* Garante remoção do fundo */
+    border-bottom: 2px solid white; /* Adiciona sublinhado branco de alto contraste */
+    color: white !important; /* Garante que o texto fique branco */
+}
+
+/* ATUALIZADO: Remove o fundo do hover e ADICIONA COR BRANCA para modos de daltonismo */
+body.protanopia .dropdown-content a:hover,
+body.deuteranopia .dropdown-content a:hover,
+body.tritanopia .dropdown-content a:hover {
+    background-color: transparent !important; /* Remove o fundo */
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: white; /* Sublinhado branco */
+    color: white !important; /* CORREÇÃO: Texto fica branco */
+}
+
+/* Garante o sublinhado e a cor do texto no modo escuro + daltonismo */
+body.dark-mode.protanopia .dropdown-content a:hover,
+body.dark-mode.deuteranopia .dropdown-content a:hover,
+body.dark-mode.tritanopia .dropdown-content a:hover {
+    background-color: transparent !important;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: white;
+    color: white !important; /* Garante que o texto também seja visível */
+}
+
+/* Barra de destaque branca para alto contraste nos modos de daltonismo */
+body.protanopia .barra-navegacao-principal .nav-link.active,
+body.deuteranopia .barra-navegacao-principal .nav-link.active,
+body.tritanopia .barra-navegacao-principal .nav-link.active {
+    border-bottom-color: #ffffff;
+}
+
+/* ATUALIZADO: Inputs e selects em modais no modo daltonismo + escuro */
+body.protanopia .modal-card .form-control,
+body.deuteranopia .modal-card .form-control,
+body.tritanopia .modal-card .form-control,
+body.dark-mode.protanopia .modal-card .form-control,
+body.dark-mode.deuteranopia .modal-card .form-control,
+body.dark-mode.tritanopia .modal-card .form-control,
+body.protanopia .modal-card .form-select,
+body.deuteranopia .modal-card .form-select,
+body.tritanopia .modal-card .form-select,
+body.dark-mode.protanopia .modal-card .form-select,
+body.dark-mode.deuteranopia .modal-card .form-select,
+body.dark-mode.tritanopia .modal-card .form-select {
+    background-color: #495057 !important; /* Fundo escuro */
+    color: #ffffff !important; /* Texto branco */
+    border-color: #6c757d !important; /* Borda visível */
+}
+
+/* ATUALIZADO: Aplica o tema escuro das tabelas nos modos de daltonismo (sem modo escuro) */
+body.protanopia .card,
+body.deuteranopia .card,
+body.tritanopia .card {
+    background-color: #343a40;
+    color: #dee2e6;
+    border-color: #495057;
+}
+body.protanopia .card-header,
+body.deuteranopia .card-header,
+body.tritanopia .card-header {
+    background-color: #495057;
+    border-bottom-color: #6c757d;
+    color: #f8f9fa;
+}
+body.protanopia .table,
+body.deuteranopia .table,
+body.tritanopia .table {
+    color: #dee2e6; /* Fallback */
+    --bs-table-color: #dee2e6; /* CORREÇÃO: Define a variável de cor do texto */
+    --bs-table-bg: #343a40;
+    --bs-table-border-color: #495057;
+    --bs-table-striped-bg: rgba(255, 255, 255, .05);
+    --bs-table-hover-bg: rgba(255, 255, 255, .075);
+}
+body.protanopia .table thead th,
+body.deuteranopia .table thead th,
+body.tritanopia .table thead th {
+    background-color: #495057;
+    border-color: #6c757d;
+    color: #f8f9fa;
+}
+body.protanopia .table tbody tr,
+body.deuteranopia .table tbody tr,
+body.tritanopia .table tbody tr {
+    border-color: var(--bs-table-border-color);
+}
+body.protanopia .table tbody tr:nth-of-type(even),
+body.deuteranopia .table tbody tr:nth-of-type(even),
+body.tritanopia .table tbody tr:nth-of-type(even) {
+    background-color: var(--bs-table-striped-bg);
+}
+
+
+/* --- FILTROS PARA DALTONISMO --- */
+body.protanopia { filter: grayscale(0.5) sepia(0.2) hue-rotate(-15deg); }
+body.deuteranopia { filter: grayscale(0.4) sepia(0.3) hue-rotate(10deg); }
+body.tritanopia { filter: grayscale(0.3) sepia(0.1) hue-rotate(20deg); }
+
+/* --- ADICIONADO: RESPONSIVIDADE --- */
+
+/* Correção do Cabeçalho Responsivo */
+@media (max-width: 991.8px) {
+    .cabecalho-inicial {
+        justify-content: center !important; /* Força centralização no mobile */
+        padding-bottom: 1rem !important; /* Adiciona espaço abaixo */
+    }
+    .container-logo {
+        order: 1; /* Logo no topo */
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+    }
+    .container-usuario {
+        order: 2; /* Usuário abaixo do logo */
+        width: 100%;
+        justify-content: center !important; /* Força centralização */
+        margin-left: 0; /* Reseta margem */
+        margin-bottom: 0.5rem;
+    }
+    .etec-info {
+        order: 3; /* Info da ETEC por último */
+        position: static; /* Tira do fluxo absoluto */
+        transform: none; /* Reseta transformação */
+        width: 100%;
+        flex-grow: 1 !important;
+    }
+    .etec-info strong {
+        font-size: 1rem;
+    }
+    .etec-info p {
+        font-size: 0.85rem;
+    }
+    .usuario-info {
+        text-align: center; /* Garante centralização do texto do usuário */
+    }
+}
+
+/* Layout "Table-to-Card" para todas as tabelas */
+@media (max-width: 768px) {
+    /* Esconde cabeçalhos de tabela */
+    .table thead {
+        display: none;
+    }
+
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+    /* Transforma a linha em um card */
+    .table tr {
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .dark-mode .table tr {
+         background-color: #343a40;
+         border-color: #495057;
+    }
+
+    .table td {
+        padding: 0.75rem 1rem;
+        text-align: right; /* Alinha o valor à direita */
+        position: relative;
+        border: none;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .dark-mode .table td {
+        border-bottom: 1px solid #495057;
+    }
+
+    .table tr td:last-child {
+        border-bottom: none;
+    }
+
+    /* Adiciona o "label" antes do conteúdo */
+    .table td[data-label]::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 1rem;
+        font-weight: bold;
+        text-align: left;
+        color: #555;
+    }
+    
+    .dark-mode .table td[data-label]::before {
+        color: #adb5bd;
+    }
+
+    /* Centraliza células de status/ações */
+    .table td.acoes-cell,
+    .table td.mobile-center {
+        text-align: center;
+    }
+     .table td.acoes-cell::before,
+     .table td.mobile-center::before {
+        display: none; /* Não mostra label para ações */
+     }
+}
+

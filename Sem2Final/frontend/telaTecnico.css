@@ -1,0 +1,632 @@
+/* --- GERAL E FONTES (Padrão Admin) --- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --font-size-base: 1rem;
+  /* 16px */
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+.card-header,
+.info-card span,
+.etec-info strong,
+.usuario-info strong {
+  font-family: 'Roboto Slab', serif;
+}
+
+/* --- CABEÇALHO (Padrão Admin) --- */
+.cabecalho-inicial {
+  background-color: #fff;
+  border-bottom: 1px solid #dee2e6;
+  position: relative;
+  justify-content: flex-start !important;
+}
+
+.container-logo a {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: none !important;
+}
+
+.container-logo img {
+  display: block;
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  transition: none !important;
+}
+
+.etec-info {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  flex-grow: 0 !important;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.etec-info strong {
+  display: block;
+  margin-bottom: 0;
+}
+
+.etec-info p,
+.usuario-info p {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.botao-sair {
+  background-color: #C41E3A;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.container-usuario,
+.container-usuario .dropdown-acessibilidade,
+.container-usuario .botao-acessibilidade,
+#botaoSair {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.container-usuario {
+  margin-left: auto;
+}
+
+.botao-sair:hover {
+  background-color: #a40000;
+}
+
+/* --- BARRA DE NAVEGAÇÃO (Padrão Admin) --- */
+.barra-navegacao-principal {
+  background-color: #a40000;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.barra-navegacao-principal.navbar {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.barra-navegacao-principal .nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 18px 40px;
+  display: block;
+  font-weight: 400;
+  transition: background-color 0.3s;
+  border-bottom: 5px solid transparent;
+  position: relative;
+}
+
+.barra-navegacao-principal .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background-color: transparent;
+  transition: background-color 0.3s;
+}
+
+.barra-navegacao-principal .nav-link:hover {
+  background-color: #8c0000;
+  color: white;
+}
+
+.barra-navegacao-principal .nav-link:hover::after {
+  background-color: #8c0000;
+}
+
+.barra-navegacao-principal .nav-link.active {
+  background-color: #8c0000;
+  color: white;
+}
+
+/* --- SEÇÕES DE CONTEÚDO --- */
+.conteudo-secao {
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.conteudo-secao.ativo {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- BOTÕES (Padrão Admin) --- */
+.btn-custom {
+    background-color: #C41E3A;
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    background-color: #a40000;
+    color: white;
+}
+
+/* --- ESTILOS GERAIS (Padrão Admin) --- */
+/* (Muitos dos estilos .card, .table, etc. são cobertos pelo Bootstrap.css) */
+/* (Estilos .card e .table do admin.css são muito similares ao Bootstrap padrão) */
+/* (Vamos manter apenas o essencial que o Bootstrap não cobre) */
+
+/* --- ACESSIBILIDADE (Padrão Admin) --- */
+.dropdown-acessibilidade {
+  position: relative;
+  display: inline-block;
+}
+
+.botao-acessibilidade {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6c757d;
+  transition: background-color 0.3s;
+}
+
+.botao-acessibilidade:hover {
+  background-color: #f4f4f4;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 5px;
+  background-color: #ffffff;
+  min-width: 240px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  border: 1px solid #dee2e6;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 10px 16px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown-content .divider {
+  height: 1px;
+  margin: .5rem 0;
+  overflow: hidden;
+  background-color: #e9ecef;
+}
+
+.dropdown-content .dropdown-header {
+  display: block;
+  padding: .5rem 1rem;
+  margin-bottom: 0;
+  font-size: .875rem;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+.dropdown-content i {
+  margin-right: 0.75rem;
+  width: 16px;
+}
+
+/* --- MODAL DE ITEM (Padrão Admin) --- */
+/* Estilos .modal-* aplicados a ambos os modais (Adicionar Item e Sair) */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-container.visivel {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background-color: white;
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px; /* Tamanho padrão para formulários simples */
+  transform: translateY(-30px);
+  transition: transform 0.3s ease;
+  z-index: 1050;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NOVO: Estilo para modal maior (lg) */
+.modal-card.modal-lg {
+  max-width: 800px;
+}
+
+.modal-container.visivel .modal-card {
+  transform: translateY(0);
+}
+
+.modal-header,
+.modal-footer {
+  padding: 1rem 1.5rem;
+  flex-shrink: 0;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* NOVO: Estilo para footer justificado */
+.modal-footer.justify-content-between {
+  justify-content: space-between;
+}
+
+.btn-close {
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+  border: 0;
+  border-radius: .25rem;
+  opacity: .5;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* --- MODO ESCURO (Padrão Admin) --- */
+body.dark-mode {
+  background-color: #212529;
+  color: #dee2e6;
+}
+
+.dark-mode .cabecalho-inicial,
+.dark-mode .card,
+.dark-mode .info-card,
+.dark-mode .modal-card,
+.dark-mode .dropdown-content {
+  background-color: #343a40;
+  color: #dee2e6;
+  border-color: #495057;
+}
+
+.dark-mode .container-logo img {
+  filter: grayscale(1) brightness(100);
+}
+
+.dark-mode .etec-info p,
+.dark-mode .usuario-info p,
+.dark-mode .info-card p,
+.dark-mode .botao-acessibilidade {
+  color: #adb5bd;
+  border-color: #6c757d;
+}
+
+.dark-mode .info-card span,
+.dark-mode .info-card i,
+.dark-mode .h4,
+.dark-mode .etec-info strong,
+.dark-mode .usuario-info strong {
+  color: #f8f9fa;
+}
+
+.dark-mode .card-header {
+  background-color: #495057;
+  border-bottom-color: #6c757d;
+}
+
+/* Tabelas e Modais no Modo Escuro */
+.dark-mode .table {
+  --bs-table-color: #dee2e6;
+  --bs-table-bg: #343a40;
+  --bs-table-border-color: #495057;
+  --bs-table-striped-bg: rgba(255, 255, 255, .05);
+  --bs-table-hover-bg: rgba(255, 255, 255, .075);
+}
+.dark-mode .table-hover>tbody>tr:hover td {
+    color: #ffffff !important;
+}
+.dark-mode .table thead th {
+  background-color: #495057;
+  border-color: #6c757d;
+  color: #f8f9fa;
+}
+
+.dark-mode .modal-card .form-control,
+.dark-mode .modal-card .form-select {
+  background-color: #495057;
+  color: #fff;
+  border-color: #6c757d;
+}
+
+/* NOVO: Estilo escuro para lista de materiais (textarea readonly) */
+.dark-mode .detalhes-kit-itens-lista {
+    background-color: #212529;
+    color: #dee2e6;
+    border-color: #495057;
+}
+.dark-mode .detalhes-label {
+    color: #adb5bd;
+}
+
+.dark-mode .modal-header,
+.dark-mode .modal-footer {
+  border-color: #6c757d;
+}
+
+.dark-mode .dropdown-content a {
+  color: #dee2e6;
+}
+
+.dark-mode .dropdown-content a:hover {
+  background-color: #495057;
+}
+
+.dark-mode .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+body.dark-mode .barra-navegacao-principal .nav-link.active {
+  border-bottom-color: #ffffff;
+}
+
+/* --- FILTROS PARA DALTONISMO --- */
+body.protanopia {
+  filter: grayscale(0.5) sepia(0.2) hue-rotate(-15deg);
+}
+
+body.deuteranopia {
+  filter: grayscale(0.4) sepia(0.3) hue-rotate(10deg);
+}
+
+body.tritanopia {
+  filter: grayscale(0.3) sepia(0.1) hue-rotate(20deg);
+}
+
+/* --- CORREÇÃO RESPONSIVA CABEÇALHO --- */
+@media (max-width: 991.98px) {
+  .cabecalho-inicial {
+      flex-wrap: wrap;
+      justify-content: center !important;
+      padding-bottom: 1rem !important;
+  }
+  
+  .etec-info {
+      position: static;
+      transform: none;
+      left: auto;
+      text-align: center;
+      flex-basis: 100%;
+      order: 3;
+      margin-top: 0.5rem;
+  }
+  
+  .container-logo {
+      order: 1;
+  }
+
+  .container-usuario {
+      order: 2;
+      margin-left: 0;
+  }
+
+  .dropdown-content {
+      left: 0;
+      right: auto;
+  }
+}
+/* --- FIM DA CORREÇÃO --- */
+
+
+/* --- RESPONSIVIDADE DAS TABELAS (Table-to-Cards) --- */
+@media (max-width: 768px) {
+    /* Esconde o cabeçalho original da tabela */
+    .table thead {
+        display: none;
+    }
+
+    /* Transforma a tabela, linhas e células em blocos */
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        background-color: #fff; /* Fundo branco para cada "card" */
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .table td {
+        text-align: right; /* Alinha o valor à direita */
+        padding-left: 50%; /* Deixa espaço para o label */
+        position: relative;
+        border: none;
+        border-bottom: 1px solid #eee; /* Linha separadora entre "campos" */
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        min-height: 2.5rem; /* Garante altura mínima */
+    }
+    
+    .table td:last-child {
+        border-bottom: none; /* Remove a borda do último item */
+    }
+
+    /* Cria o "label" usando o data-label */
+    .table td[data-label]::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0.75rem;
+        padding-right: 0.75rem;
+        width: calc(50% - 1.5rem); /* Metade do espaço menos o padding */
+        text-align: left;
+        font-weight: bold;
+        color: #495057;
+    }
+    
+    /* Células que devem ser centralizadas (como Quantidade) */
+    .table td.mobile-center {
+        text-align: center;
+        padding-left: 0.75rem; /* Reseta o padding */
+    }
+    .table td.mobile-center[data-label]::before {
+        /* Em vez de position absolute, bota o label em cima */
+        position: static;
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        color: #495057;
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Células de Ação (botões) */
+    .table td.acoes-cell {
+        text-align: center;
+        padding-left: 0.75rem; /* Reseta padding */
+    }
+    .table td.acoes-cell::before {
+        display: none; /* Sem label */
+    }
+    
+    /* Ajustes para modo escuro */
+    body.dark-mode .table tr {
+        background-color: #343a40;
+        border-color: #495057;
+    }
+    body.dark-mode .table td {
+          border-bottom-color: #495057;
+    }
+      body.dark-mode .table td[data-label]::before,
+      body.dark-mode .table td.mobile-center[data-label]::before {
+        color: #f8f9fa;
+      }
+}
+/* --- FIM DA RESPONSIVIDADE DAS TABELAS --- */
+
+/* --- NOVO: Estilos para Modal de Análise --- */
+.detalhes-aula-grupo {
+    margin-bottom: 1rem;
+}
+.detalhes-label {
+    display: block;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #6c757d;
+}
+.detalhes-valor {
+    font-size: 1.1em;
+    color: #333;
+}
+.detalhes-kit-itens-lista {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 1rem;
+    font-size: 1em;
+    color: #333;
+    white-space: pre-wrap;
+    min-height: 150px;
+}
+
+#btnDesfazerEstoque {
+  color: black;
+  border-color: #43545c;
+}
+
+#btnDesfazerEstoque:hover {
+  background-color: #43545c;
+  color: whitesmoke;
+}

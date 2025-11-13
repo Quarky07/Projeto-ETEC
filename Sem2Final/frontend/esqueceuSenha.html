@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esqueceu a Senha - Sistema de Laboratórios</title>
+    
+    <!-- Google Fonts (Roboto e Roboto Slab) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="telaLogin.css">
+</head>
+<body>
+    <div class="container">
+       <div class="brand-images-top">
+            <!-- Imagem ETEC (Correta) -->
+            <img src="https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/143/2024/04/etec_santo_andre.png" alt="Etec Júlio de Mesquita - Santo André" class="brand-image top">
+            
+            <!-- CORRIGIDO: URL do logo do CPS substituída por um link SVG oficial -->
+            <img src="https://www.cps.sp.gov.br/wp-content/themes/cps/assets/images/logo-cps.svg" alt="Centro Paula Souza" class="brand-image top" style="max-width: 150px; height: 50px; object-fit: contain;">
+        </div>
+        <div class="page-titles">
+            <h1 class="title-main">Sistema de Laboratórios</h1>
+            <h2 class="title-medium">ETEC Júlio de Mesquita</h2>
+            <p class="title-sub">Recuperação de Senha</p>
+        </div>
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Recuperar Senha</h2>
+                <p>Digite o seu e-mail de cadastro</p>
+            </div>
+
+            <form class="login-form" id="recuperarSenhaForm">
+                <div class="input-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                </div>
+                
+                <div id="error-message" class="error-message" style="display: none;">
+                    <p>Ocorreu um erro.</p>
+                </div>
+                
+                <button type="submit" class="login-button" id="recover-button">Recuperar Senha</button>
+            </form>
+            
+            <div class="back-login">
+                <p>Lembrou da senha? <a href="telaLogin.html">Voltar ao Login</a></p>
+            </div>
+        </div>
+        <!-- Imagem Governo (Placeholder) -->
+        <img src="https://placehold.co/180x50/ffffff/000000?text=GOVERNO+SP" alt="Governo do Estado de São Paulo" class="brand-image bottom" style="max-width: 180px;">
+    </div>
+
+    <!-- Scripts da Aplicação -->
+    <script src="apiService.js"></script>
+    <script src="esqueceuSenha.js"></script>
+</body>
+</html>
+

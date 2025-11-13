@@ -1,0 +1,34 @@
+# Arquivos de log, que podem conter informações sensíveis.
+*.log
+npm-debug.log*
+
+# Arquivos de ambiente - NUNCA ENVIE SENHAS OU CHAVES DE API PARA O GITHUB!
+# É comum armazenar senhas de banco de dados, chaves de API, etc., em um arquivo .env.
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Pastas de build ou distribuição, que são geradas automaticamente.
+/build
+/dist
+
+### Sistema Operacional ###
+# Arquivos de cache e de sistema do macOS e Windows.
+.DS_Store
+Thumbs.db
+
+### Editor VS Code ###
+# Configurações de ambiente de trabalho específicas do usuário.
+.vscode/
+
+### Arquivos Comprimidos e Outros ###
+# Com base na sua imagem, você tem um frontend.zip.
+# Arquivos .zip, .rar, etc., não devem ser versionados.
+*.zip
+*.rar
+*.gz
+*.json
+
+node_modules/

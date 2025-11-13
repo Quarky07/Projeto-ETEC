@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Administração - ETEC</title>
+
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Google Fonts (Roboto e Roboto Slab) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Link para o arquivo CSS externo -->
+    <link rel="stylesheet" href="telaAdmin.css">
+</head>
+
+<body>
+    <!-- VLibras Widget -->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+
+    <!-- HEADER (Atualizado com classes responsivas do Bootstrap) -->
+    <header class="cabecalho-inicial p-3 d-flex flex-wrap justify-content-between align-items-center">
+        <!-- Coluna da Esquerda: Logo -->
+        <div class="container-logo d-flex align-items-center">
+            <a id="logoLink" href="https://etecjuliodemesquita.cps.sp.gov.br/"
+                title="Visitar site da ETEC Júlio de Mesquita" aria-label="Abrir site da ETEC Júlio de Mesquita">
+                <!-- ATUALIZADO: Corrigido o 'src' da imagem para a URL correta -->
+                <img src="https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/143/2024/04/etec_santo_andre.png"
+                    alt="Etec Júlio de Mesquita" class="me-2" style="height: 50px;">
+            </a>
+        </div>
+
+        <!-- Coluna do Meio: Informações da ETEC -->
+        <div class="etec-info flex-grow-1 text-center mx-3 my-2 my-md-0">
+            <strong>ETEC Júlio de Mesquita</strong>
+            <p class="mb-0">Sistema de Laboratórios de Química</p>
+        </div>
+
+        <!-- Coluna da Direita: Usuário e Ações -->
+        <div
+            class="container-usuario d-flex align-items-center flex-wrap justify-content-center justify-content-md-end">
+            <!-- Acessibilidade Dropdown -->
+            <div class="dropdown-acessibilidade me-2">
+                <button class="botao-acessibilidade" id="accessibilityBtn">
+                    Acessibilidade
+                </button>
+                <div class="dropdown-content" id="accessibilityDropdown">
+                    <a href="#" id="toggle-dark-mode"><i class="bi bi-moon-stars-fill"></i>Modo Escuro</a>
+                    <div class="divider"></div>
+                    <span class="dropdown-header">Tamanho da Fonte</span>
+                    <a href="#" id="increase-font"><i class="bi bi-zoom-in"></i>Aumentar Fonte (A+)</a>
+                    <a href="#" id="decrease-font"><i class="bi bi-zoom-out"></i>Diminuir Fonte (A-)</a>
+                    <div class="divider"></div>
+                    <span class="dropdown-header">Daltonismo</span>
+                    <a href="#" data-mode="normal">Padrão</a>
+                    <a href="#" data-mode="protanopia">Protanopia</a>
+                    <a href="#" data-mode="deuteranopia">Deuteranopia</a>
+                    <a href="#" data-mode="tritanopia">Tritanopia</a>
+                </div>
+            </div>
+            <!-- Info do Usuário (com IDs) -->
+            <div class="usuario-info me-3 text-md-end text-center">
+                <strong id="nome-usuario">Carregando...</strong>
+                <p class="mb-0" id="tipo-usuario">Admin</p>
+            </div>
+            <button class="botao-sair" id="botaoSair">
+                Sair</button>
+        </div>
+    </header>
+
+    <!-- BARRA DE NAVEGAÇÃO (Atualizada com classes responsivas do Bootstrap) -->
+    <nav class="barra-navegacao-principal navbar navbar-expand-lg">
+        <div class="container-fluid justify-content-center">
+            <!-- Botão "Sanduíche" para telas pequenas -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Links de navegação -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <div class="navbar-nav">
+                    <a href="#" class="nav-link active" data-target="dashboard">Dashboard</a>
+                    <a href="#" class="nav-link" data-target="usuarios">Usuários</a>
+                    <a href="#" class="nav-link" data-target="estoque">Estoque</a>
+                    <a href="#" class="nav-link" data-target="estatisticas">Estatísticas</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="container py-4">
+        <!-- SEÇÃO 1: DASHBOARD (ANTIGO AGENDAMENTOS) -->
+        <section id="dashboard" class="conteudo-secao ativo">
+            <!-- Cards de Resumo (Atualizado com Grid Bootstrap) -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="info-card">
+                        <i class="bi bi-calendar-check"></i>
+                        <div>
+                            <p>Agendamentos Totais</p>
+                            <span id="card-agendamentos">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="info-card">
+                        <i class="bi bi-calendar-x"></i>
+                        <div>
+                            <p>Pendentes</p>
+                            <span id="card-pendentes">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="info-card">
+                        <i class="bi bi-people-fill"></i>
+                        <div>
+                            <p>Usuários Ativos</p>
+                            <span id="card-usuarios">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="info-card">
+                        <i class="bi bi-box-seam"></i>
+                        <div>
+                            <p>Itens no Estoque</p>
+                            <span id="card-estoque">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Agendamentos -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Todos os Agendamentos</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Professor(a)</th>
+                                    <th>Laboratório</th>
+                                    <th>Data</th>
+                                    <th>Horário</th>
+                                    <th class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-agendamentos-tbody">
+                                <!-- Conteúdo injetado pelo JS -->
+                                <tr>
+                                    <td colspan="6" class="text-center">Carregando agendamentos...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: USUÁRIOS -->
+        <section id="usuarios" class="conteudo-secao">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Gestão de Usuários</h2>
+                    <button class="btn btn-custom" id="abrirModalBtn"><i
+                            class="bi bi-person-plus-fill me-2"></i>Cadastrar Usuário</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Cargo</th>
+                                    <th class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-usuarios-tbody">
+                                <!-- Conteúdo injetado pelo JS -->
+                                <tr>
+                                    <td colspan="4" class="text-center">Carregando usuários...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: ESTOQUE -->
+        <section id="estoque" class="conteudo-secao">
+            <div class="card">
+                <!-- CABEÇALHO ATUALIZADO COM BOTÃO -->
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Controle de Estoque</h2>
+                    <button class="btn btn-custom" id="abrirModalEstoqueBtn"><i
+                            class="bi bi-plus-circle-fill me-2"></i>Adicionar Item</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Descrição</th>
+                                    <th>Tipo</th>
+                                    <th class="text-center">Quantidade</th>
+                                    <th>Localização</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-estoque-tbody">
+                                <!-- Conteúdo injetado pelo JS -->
+                                <tr>
+                                    <td colspan="5" class="text-center">Carregando estoque...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="estatisticas" class="conteudo-secao">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Estatísticas do Sistema</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4 mb-4">
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="info-card">
+                                <i class="bi bi-calendar-heart"></i>
+                                <div>
+                                    <p>Laboratório Mais Usado</p>
+                                    <span id="stat-lab-mais-usado">Carregando...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="info-card">
+                                <i class="bi bi-graph-up-arrow"></i>
+                                <div>
+                                    <p>Professor Mais Ativo</p>
+                                    <span id="stat-prof-ativo">Carregando...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="info-card">
+                                <i class="bi bi-clock-history"></i>
+                                <div>
+                                    <p>Horário de Pico</p>
+                                    <span id="stat-horario-pico">Carregando...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="info-card">
+                                <i class="bi bi-person-check-fill"></i>
+                                <div>
+                                    <p>Total de Professores</p>
+                                    <span id="stat-total-prof">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="info-card">
+                                <i class="bi bi-check-all"></i>
+                                <div>
+                                    <p>Agendamentos Concluídos</p>
+                                    <span id="stat-concluidos">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="info-card">
+                                <i class="bi bi-x-octagon-fill"></i>
+                                <div>
+                                    <p>Agendamentos Cancelados</p>
+                                    <span id="stat-cancelados">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Cadastro de Usuário -->
+    <div class="modal-container" id="userModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h5 class="modal-title">Cadastrar Novo Usuário</h5>
+                <button type="button" class="btn-close" id="fecharModalBtn"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formUsuario">
+                    <div class="form-group mb-3">
+                        <label for="nome" class="form-label">Nome Completo</label>
+                        <input type="text" class="form-control" id="nome" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label">E-mail Institucional</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="cargo" class="form-label">Cargo</label>
+                        <select class="form-select" id="cargo" required>
+                            <option value="" selected disabled>Selecione um cargo...</option>
+                            <option value="professor">Professor</option>
+                            <option value="tecnico">Técnico de Laboratório</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="senha" class="form-label">Senha Provisória</label>
+                        <input type="password" class="form-control" id="senha" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarModalBtn">Cancelar</button>
+                <button type="submit" form="formUsuario" class="btn btn-success">Salvar Usuário</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro de Item de Estoque -->
+    <div class="modal-container" id="estoqueModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h5 class="modal-title">Adicionar Novo Item ao Estoque</h5>
+                <button type="button" class="btn-close" id="fecharModalEstoqueBtn"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEstoque">
+                    <div class="form-group mb-3">
+                        <label for="itemNome" class="form-label">Nome do Item</label>
+                        <input type="text" class="form-control" id="itemNome" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="itemDesc" class="form-label">Descrição</label>
+                        <input type="text" class="form-control" id="itemDesc">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="itemLocal" class="form-label">Localização</label>
+                        <select class="form-select" id="itemLocal" required>
+                            <option value="" selected disabled>Selecione um local...</option>
+                            <option value="Lab. 1 - Bancada">Lab. 1 - Bancada</option>
+                            <option value="Lab. 2 - Bancada">Lab. 2 - Bancada</option>
+                            <option value="Lab. 3 - Bancada">Lab. 3 - Bancada</option>
+                            <option value="Armário 7">Armário 7</option>
+                            <option value="Estoque">Estoque</option>
+                            <option value="Almoxarifado Central">Almoxarifado Central</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos condicionais (Unidade/Peso) -->
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="itemTipoUnidade" class="form-label">Tipo de Medida</label>
+                                <select class="form-select" id="itemTipoUnidade">
+                                    <option value="unidade" selected>Unidade (UN)</option>
+                                    <option value="peso">Peso (g)</option>
+                                    <option value="litros">Volume (ml)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- O Label e o Input aqui serão alterados pelo JS -->
+                            <div class="form-group" id="containerValorEstoque">
+                                <label for="itemValor" class="form-label">Quantidade (UN)</label>
+                                <input type="number" class="form-control" id="itemValor" step="1" min="1" required
+                                    placeholder="Ex: 10">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarModalEstoqueBtn">Cancelar</button>
+                <button type="submit" form="formEstoque" class="btn btn-success">Salvar Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast/Alerta Global (Copiado de telaProfessor) -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="globalToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong class="me-auto" id="toastTitle">Notificação</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+                Mensagem.
+            </div>
+        </div>
+    </div>
+    <div class="modal-container" id="modalConfirmarSaida">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Saída</h5>
+                <button type="button" class="btn-close" id="fecharModalSaidaBtn"></button>
+            </div>
+            <div class="modal-body">
+                <p>Você tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelarSaidaBtn">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmarSaidaBtn">Sair</button>
+            </div>
+        </div>
+    </div>
+    <!-- VLibras JS -->
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+    <!-- Bootstrap JS Bundle (Necessário para o menu sanduíche funcionar) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- Link para o arquivo JavaScript externo -->
+    <script src="TelaAdmin.js"></script>
+</body>
+
+</html>
