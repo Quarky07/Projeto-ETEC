@@ -156,7 +156,6 @@
         getAgendamentosPendentes: () => {
             return fetchComToken(`${API_URL}/tecnico/agendamentos/pendentes`);
         },
-        // ATUALIZADO (Tarefa 4): Agora aceita 'pesos_solucao'
         updateStatusAgendamento: (id, status, pesos_solucao = null) => {
              return fetchComToken(`${API_URL}/tecnico/agendamentos/${id}/status`, {
                 method: 'PUT',
@@ -186,7 +185,6 @@
             });
         },
 
-        // ADICIONADO (Tarefa 3): Rota para desfazer alteração no estoque
         undoEstoqueChange: () => {
             return fetchComToken(`${API_URL}/estoque/undo`, {
                 method: 'POST'

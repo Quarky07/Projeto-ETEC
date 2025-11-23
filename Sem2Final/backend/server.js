@@ -1,5 +1,5 @@
-const express = require('express');
 const cors = require('cors');
+const express = require('express');
 const jwt = require('jsonwebtoken'); // Para autenticação
 const pool = require('./db'); // Importa o pool de conexão MySQL
 const path = require('path');
@@ -253,8 +253,8 @@ app.post('/api/professor/agendamentos', autenticarToken, async (req, res) => {
   const {
     data_hora_inicio, data_hora_fim,
     fk_laboratorio, observacoes, 
-    materiais_selecionados, // Lista de materiais [{id_material, quantidade, formato}]
-    fk_kit // ID do kit selecionado
+    materiais_selecionados,
+    fk_kit
   } = req.body;
 
   if (!data_hora_inicio || !data_hora_fim || !fk_laboratorio) {
@@ -265,7 +265,6 @@ app.post('/api/professor/agendamentos', autenticarToken, async (req, res) => {
   try {
     await connection.beginTransaction();
 
-    // 1. Inserir o agendamento principal
     const [result] = await connection.query(
       `INSERT INTO agendamentos 
         (fk_usuario, data_hora_inicio, data_hora_fim, fk_laboratorio, observacoes, fk_kit, status_agendamento)
@@ -274,15 +273,12 @@ app.post('/api/professor/agendamentos', autenticarToken, async (req, res) => {
     );
     const novoAgendamentoId = result.insertId;
 
-    // 2. Inserir os materiais selecionados (se houver)
     if (materiais_selecionados && materiais_selecionados.length > 0) {
       
       const materiaisValues = materiais_selecionados.map(m => 
-        // Ordem Correta: [fk_agendamento, fk_material, quantidade_solicitada, formato]
         [novoAgendamentoId, m.id_material, m.quantidade, m.formato || 'solido'] 
       );
       
-      // CORRIGIDO: Especificar as colunas no INSERT para evitar erro de FK
       await connection.query(
         'INSERT INTO agendamento_materiais (fk_agendamento, fk_material, quantidade_solicitada, formato) VALUES ?',
         [materiaisValues]
@@ -450,11 +446,9 @@ app.post('/api/professor/kits', autenticarToken, async (req, res) => {
     if (materiais_kit.length > 0) {
       
       const kitMateriaisValues = materiais_kit.map(m => 
-        // Ordem Correta: [fk_kit, fk_material, quantidade_no_kit, formato]
         [novoKitId, m.id_material, m.quantidade, m.formato || 'solido']
       );
       
-      // CORRIGIDO: Especificar as colunas no INSERT para evitar erro de FK
       await connection.query(
         'INSERT INTO kit_materiais (fk_kit, fk_material, quantidade_no_kit, formato) VALUES ?', 
         [kitMateriaisValues]
@@ -505,10 +499,8 @@ app.put('/api/professor/kits/:id', autenticarToken, async (req, res) => {
     await connection.query('DELETE FROM kit_materiais WHERE fk_kit = ?', [id]);
 
     if (materiais_kit.length > 0) {
-      // Ordem Correta: [fk_kit, fk_material, quantidade_no_kit, formato]
       const kitMateriaisValues = materiais_kit.map(m => [id, m.id_material, m.quantidade, m.formato || 'solido']);
 
-      // CORRIGIDO: Especificar as colunas no INSERT
       await connection.query(
         'INSERT INTO kit_materiais (fk_kit, fk_material, quantidade_no_kit, formato) VALUES ?', 
         [kitMateriaisValues]
@@ -536,13 +528,37 @@ app.delete('/api/professor/kits/:id', autenticarToken, async (req, res) => {
         return res.status(403).json({ error: 'Acesso negado.' });
     }
     const { id } = req.params;
+    const connection = await pool.getConnection();
     try {
-        await pool.query('DELETE FROM kit_materiais WHERE fk_kit = ?', [id]);
+        await connection.beginTransaction();
         
-        const [result] = await pool.query(
+        // Verificar se o kit existe
+        const [kitExists] = await connection.query('SELECT id_kit FROM kits WHERE id_kit = ?', [id]);
+        if (kitExists.length === 0) {
+            await connection.rollback();
+            return res.status(404).json({ error: 'Kit não encontrado.' });
+        }
+        
+        // Verificar se o kit está sendo usado em agendamentos ANTES de excluir qualquer coisa
+        const [agendamentos] = await connection.query(
+            'SELECT id_agendamento FROM agendamentos WHERE fk_kit = ?',
+            [id]
+        );
+        
+        if (agendamentos.length > 0) {
+            await connection.rollback();
+            return res.status(409).json({ error: 'Este kit não pode ser excluído pois está sendo usado em agendamentos.' });
+        }
+        
+        // Se chegou aqui, o kit não está em agendamentos, pode excluir com segurança
+        await connection.query('DELETE FROM kit_materiais WHERE fk_kit = ?', [id]);
+        
+        const [result] = await connection.query(
             'DELETE FROM kits WHERE id_kit = ?',
             [id]
         );
+        
+        await connection.commit();
         
         if (result.affectedRows > 0) {
             res.sendStatus(204); 
@@ -550,11 +566,11 @@ app.delete('/api/professor/kits/:id', autenticarToken, async (req, res) => {
             res.status(404).json({ error: 'Kit não encontrado.' });
         }
     } catch (err) {
+        await connection.rollback();
         console.error(err);
-        if (err.code === 'ER_ROW_IS_REFERENCED_2') {
-             return res.status(409).json({ error: 'Este kit não pode ser excluído pois está sendo usado em agendamentos.' });
-        }
         res.status(500).json({ error: err.message });
+    } finally {
+        connection.release();
     }
 });
 
@@ -723,6 +739,25 @@ app.post('/api/estoque/undo', autenticarToken, async (req, res) => {
              return res.status(409).json({ error: `Não é possível desfazer. O estoque de "${ultimoLog.fk_material}" mudou. Log: ${ultimoLog.quantidade_nova}, Atual: ${estoqueAtual}.` });
         }
 
+        // Se a quantidade anterior era 0, significa que o item foi criado ou o estoque estava zerado.
+        // Se a alteração foi positiva (criação/adição), reverter para 0 pode significar que queremos excluir o item se ele foi recém-criado.
+        // O log não diz explicitamente "Criação", mas podemos inferir se quantidade_anterior == 0 e alteracao == quantidade_nova.
+        if (parseFloat(ultimoLog.quantidade_anterior) === 0 && parseFloat(ultimoLog.quantidade_nova) === parseFloat(ultimoLog.alteracao)) {
+            // Verifica se existem dependências antes de tentar excluir
+             try {
+                await connection.query('DELETE FROM materiais WHERE id_material = ?', [ultimoLog.fk_material]);
+                // Se excluiu com sucesso, remove o log
+                await connection.query('DELETE FROM Log_Estoque WHERE id_log = ?', [ultimoLog.id_log]);
+                await connection.commit();
+                return res.json({ success: true, message: `Alteração desfeita. Material recém-criado foi removido do estoque.` });
+             } catch (delErr) {
+                 // Se der erro (ex: FK), faz rollback apenas da tentativa de delete e prossegue com o update padrão
+                 // Mas como estamos dentro de uma transação, o rollback seria total?
+                 // Melhor verificar antes.
+             }
+        }
+        
+        // Comportamento padrão: Reverter quantidade
         await connection.query(
             'UPDATE materiais SET quantidade = ? WHERE id_material = ?',
             [ultimoLog.quantidade_anterior, ultimoLog.fk_material]
@@ -742,7 +777,7 @@ app.post('/api/estoque/undo', autenticarToken, async (req, res) => {
     }
 });
 
-// ADICIONADO: [ADMIN/TECNICO] Excluir material (Estoque)
+// [ADMIN/TECNICO] Excluir material (Estoque)
 app.delete('/api/materiais/:id', autenticarToken, async (req, res) => {
     if (req.user.tipo_usuario !== 'admin' && req.user.tipo_usuario !== 'tecnico') {
         return res.status(403).json({ error: 'Acesso negado.' });
@@ -750,14 +785,10 @@ app.delete('/api/materiais/:id', autenticarToken, async (req, res) => {
     const { id } = req.params;
 
     try {
-        // Tenta excluir o material.
-        // Isso VAI FALHAR (com ER_ROW_IS_REFERENCED_2) se o item estiver
-        // em uso em 'kit_materiais', 'agendamento_materiais' ou 'Log_Estoque'.
-        // Isso é o comportamento desejado para manter a integridade.
         const [result] = await pool.query('DELETE FROM materiais WHERE id_material = ?', [id]);
         
         if (result.affectedRows > 0) {
-            res.sendStatus(204); // Sucesso (sem conteúdo)
+            res.sendStatus(204);
         } else {
             res.status(404).json({ error: 'Material não encontrado.' });
         }

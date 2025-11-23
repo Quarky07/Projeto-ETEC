@@ -372,7 +372,6 @@ h6,
 .status-concluido { border-left-color: #6c757d; }
 .status-concluido .status-texto { background-color: #6c757d; }
 
-
 /* Novo Agendamento - Laboratório Cards */
 .laboratorios-card {
     position: relative;
@@ -578,7 +577,6 @@ h6,
     cursor: pointer;
 }
 
-
 /* --- ACESSIBILIDADE (Padrão Admin) --- */
 .dropdown-acessibilidade {
     position: relative;
@@ -650,6 +648,15 @@ body.dark-mode {
     background-color: #212529;
     color: #dee2e6;
 }
+
+body.dark-mode .detalhes-valor {
+    color: #f8f9fa;
+}
+
+body.dark-mode .detalhes-label {
+    color: #adb5bd;
+}
+
 .dark-mode .cabecalho-inicial,
 .dark-mode .card,
 .dark-mode .info-card,

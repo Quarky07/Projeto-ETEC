@@ -73,10 +73,9 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('tipo-usuario').innerText = appState.userType;
     }
 
-    // --- CARREGAMENTO DE DADOS (ATUALIZADO - Tarefas 1 e 4) ---
+    // --- CARREGAMENTO DE DADOS ---
     async function iniciarCarregamentoDados(silencioso = false) {
         try {
-            // Carregar dados em paralelo
             const [agendamentos, kits, laboratorios, materiais] = await Promise.all([
                 window.apiService.getAgendamentosProfessor(),
                 window.apiService.getKits(),
@@ -129,9 +128,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function renderProximasAulas() {
         const container = document.getElementById('lista-proximas-aulas');
         const agora = new Date();
+        // Exibe aulas futuras ou que ainda não foram concluídas/canceladas (mesmo que horário de início já tenha passado)
         const proximosAgendamentos = appState.agendamentos.filter(a => 
-            new Date(a.data_hora_inicio) > agora && a.status_agendamento !== 'cancelado'
+            (new Date(a.data_hora_fim) > agora || a.status_agendamento === 'pendente' || a.status_agendamento === 'confirmado') && 
+            a.status_agendamento !== 'cancelado' && a.status_agendamento !== 'concluido' && a.status_agendamento !== 'concluído'
         ).sort((a, b) => new Date(a.data_hora_inicio) - new Date(b.data_hora_inicio));
+
         if (proximosAgendamentos.length === 0) {
             container.innerHTML = '<p class="text-center p-3">Nenhuma aula agendada.</p>';
             return;
@@ -163,28 +165,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     function renderHistorico() {
         const container = document.getElementById('lista-historico');
-        const agora = new Date();
+        
+        // Normaliza status (com ou sem acento)
         const historico = appState.agendamentos.filter(a => 
-            new Date(a.data_hora_inicio) <= agora || a.status_agendamento === 'cancelado'
+            a.status_agendamento === 'concluído' || a.status_agendamento === 'concluido' || a.status_agendamento === 'cancelado'
         ).sort((a, b) => new Date(b.data_hora_inicio) - new Date(a.data_hora_inicio));
+
         if (historico.length === 0) {
             container.innerHTML = '<tr><td colspan="5" data-label="Aviso" class="text-center">Nenhum histórico encontrado.</td></tr>';
             return;
         }
-        container.innerHTML = historico.map(aula => `
-            <tr data-id="${aula.id_agendamento}">
-                <td data-label="Experimento">${aula.observacoes || 'Aula experimental'}</td>
-                <td data-label="Laboratório">${aula.nome_laboratorio || 'N/A'}</td>
-                <td data-label="Kit">${aula.nome_kit || 'N/A'}</td>
-                <td data-label="Data">${formatarData(aula.data_hora_inicio)}</td>
-                <td data-label="Status" class="text-center mobile-center">
-                    <span class="status-texto status-${aula.status_agendamento}">${aula.status_agendamento}</span>
-                </td>
-            </tr>
-        `).join('');
+
+        container.innerHTML = historico.map(aula => {
+            const isConcluido = aula.status_agendamento.includes('concluid') || aula.status_agendamento.includes('concluíd');
+            const corStatus = isConcluido ? '#28a745' : '#dc3545';
+            
+            return `
+                <tr data-id="${aula.id_agendamento}">
+                    <td data-label="Experimento">${aula.observacoes || 'Aula experimental'}</td>
+                    <td data-label="Laboratório">${aula.nome_laboratorio || 'N/A'}</td>
+                    <td data-label="Kit">${aula.nome_kit || 'N/A'}</td>
+                    <td data-label="Data">${formatarData(aula.data_hora_inicio)}</td>
+                    <td data-label="Status" class="text-center mobile-center">
+                        <span class="status-texto status-${aula.status_agendamento}" style="color: ${corStatus}">${aula.status_agendamento}</span>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     }
     
-    // (Tarefas 1 e 4) - MODIFICADO: A descrição (itens) agora vem de 'kit.materiais'
     function renderMeusKits() {
         const container = document.getElementById('lista-meus-kits');
         if (appState.kits.length === 0) {
@@ -192,7 +201,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         container.innerHTML = appState.kits.map(kit => {
-            // Cria a descrição a partir da lista de materiais
             const descricaoItens = kit.materiais && kit.materiais.length > 0
                 ? kit.materiais.map(m => `- ${m.quantidade} ${m.unidade || ''} de ${m.nome} (${m.formato})`).join('\n')
                 : 'Kit vazio.';
@@ -217,7 +225,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `}).join('');
     }
     
-    // ATUALIZADO (Tarefas 1 e 4): Agora só renderiza os labs e o dropdown de kits
     function renderFormularioAgendamento() {
         const labContainer = document.getElementById('lista-laboratorios-form');
         if (appState.laboratorios.length > 0) {
@@ -249,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // --- (Tarefas 1 e 4) LÓGICA DO SELETOR DE MATERIAIS ---
+    // --- LÓGICA DO SELETOR DE MATERIAIS ---
 
     /**
      * Cria um seletor de materiais interativo.
@@ -299,7 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (e.target.classList.contains('input-qtd-material')) {
                         updateItem(id, 'quantidade', parseFloat(e.target.value) || 1);
                     }
-                    // (Tarefa 4) Atualizar Formato (Sólido/Solução)
+                    // Atualizar Formato (Sólido/Solução)
                     if (e.target.classList.contains('input-formato-material')) {
                         updateItem(id, 'formato', e.target.value);
                     }
@@ -355,7 +362,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if(placeholderEl) placeholderEl.style.display = 'none';
 
             selecionadosEl.innerHTML = selectedItems.map(item => {
-                // (Tarefa 4) Lógica para Sólido/Solução
                 let formatoHtml = '';
                 if (item.tipo_material === 'reagente') {
                     formatoHtml = `
@@ -408,7 +414,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     quantidade: 1,
                     unidade: item.unidade,
                     tipo_material: item.tipo_material,
-                    formato: 'solido' // (Tarefa 4) - Padrão
+                    formato: 'solido'
                 });
                 renderDisponiveis();
                 renderSelecionados();
@@ -462,7 +468,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return { init, getSelectedItems, loadFromKit, renderDisponiveis };
     }
 
-    // (Tarefas 1 e 4) - Inicializa os 3 seletores
     function inicializarSeletoresDeMateriais() {
         agendamentoSelector = createMaterialSelector('Agendamento');
         novoKitSelector = createMaterialSelector('Kit');
@@ -556,26 +561,24 @@ document.addEventListener("DOMContentLoaded", function () {
         adicionarCliqueFora(modalConfirmarSaida, fecharModalSaida);
     }
     
-    // --- LÓGICA DE FORMULÁRIOS (ATUALIZADA - Tarefas 1 e 4) ---
+    // --- LÓGICA DE FORMULÁRIOS ---
     function iniciarListenersFormularios() {
 
-        // (Tarefas 1 e 4) - Listener do dropdown de kit (para preencher o seletor)
         const kitSelect = document.getElementById('select-kit-existente');
         if (kitSelect) {
             kitSelect.addEventListener('change', (e) => {
                 const kitId = e.target.value;
                 if (!kitId) {
-                    agendamentoSelector.loadFromKit([]); // Limpa a lista
+                    agendamentoSelector.loadFromKit([]);
                     return;
                 }
                 const kit = appState.kits.find(k => k.id == kitId);
                 if (kit) {
-                    agendamentoSelector.loadFromKit(kit.materiais); // Carrega os itens do kit
+                    agendamentoSelector.loadFromKit(kit.materiais);
                 }
             });
         }
 
-        // (Tarefas 1 e 4) - ATUALIZADO: Submit do Novo Agendamento
         const formNovoAgendamento = document.getElementById('formNovoAgendamento');
         const btnConfirmarAgendamento = formNovoAgendamento ? formNovoAgendamento.querySelector('.btn-custom-confirmar') : null;
 
@@ -634,7 +637,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        // (Tarefas 1 e 4) - ATUALIZADO: Submit do Novo Kit
         const formNovoKit = document.getElementById("formNovoKit");
         const btnSalvarKit = formNovoKit ? formNovoKit.querySelector('.btn-success') : null;
 
@@ -676,7 +678,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
         
-        // (Tarefas 1 e 4) - ATUALIZADO: Submit do Editar Kit
         const formEditarKit = document.getElementById("formEditarKit");
         const btnSalvarEdicaoKit = formEditarKit ? formEditarKit.querySelector('.btn-success') : null;
         
@@ -720,7 +721,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     } 
 
-    // --- Lógica de Modais (ATUALIZADA - Tarefas 1 e 4) ---
+    // --- Lógica de Modais ---
     function adicionarCliqueFora(modalElement, fecharFn) {
         if (modalElement) {
             modalElement.addEventListener('click', (event) => {
@@ -756,7 +757,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const aula = appState.agendamentos.find(a => a.id_agendamento == id);
         if (!aula) return;
         document.getElementById('detalhe-titulo-val').innerText = aula.observacoes || 'Aula experimental'; // ID corrigido
-        document.getElementById('detalhe-status').innerHTML = `<span class="status-texto status-${aula.status_agendamento}">${aula.status_agendamento}</span>`;
+        // Corrigindo o bug de acessibilidade
+        let concluido = true;
+        if (aula.status_agendamento === 'pendente') {
+            concluido = false;
+        }
+        document.getElementById('detalhe-status').innerHTML = `<span class="status-texto status-${aula.status_agendamento}" style="color:
+        ${concluido ? '#28a745' : '#ffc107'};">${aula.status_agendamento}</span>`;
+
         document.getElementById('detalhe-turma').innerText = 'N/A';
         document.getElementById('detalhe-alunos').innerText = 'N/A';
         document.getElementById('detalhe-lab').innerText = aula.nome_laboratorio || 'N/A';
@@ -782,7 +790,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btnFecharModalKitFooter) btnFecharModalKitFooter.addEventListener("click", fecharModalVerKit);
     adicionarCliqueFora(modalVerKit, fecharModalVerKit);
     
-    // ATUALIZADO (Tarefas 1 e 4): Renderiza a lista de materiais
     function abrirModalVerKit(id) {
         const kit = appState.kits.find(k => k.id == id);
         if (!kit) return;
@@ -807,7 +814,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btnCancelarModalEditarKit) btnCancelarModalEditarKit.addEventListener("click", fecharModalEditarKit);
     adicionarCliqueFora(modalEditarKit, fecharModalEditarKit);
     
-    // ATUALIZADO (Tarefas 1 e 4): Carrega os itens do kit no seletor
     function abrirModalEditarKit(id) {
         const kit = appState.kits.find(k => k.id == id);
         if (!kit) return;
@@ -979,8 +985,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!dataString) return 'N/A';
         try {
             const dataObj = new Date(dataString);
-            const dia = String(dataObj.getUTCDate()).padStart(2, '0');
-            const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0');
+            const dia = String(dataObj.getDate()).padStart(2, '0');
+            const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
             const ano = dataObj.getUTCFullYear();
             return `${dia}/${mes}/${ano}`;
         } catch(e) {
@@ -991,8 +997,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!dataString) return 'N/A';
         try {
             const dataObj = new Date(dataString);
-            const horas = String(dataObj.getUTCHours()).padStart(2, '0');
-            const minutos = String(dataObj.getUTCMinutes()).padStart(2, '0');
+            const horas = String(dataObj.getHours()).padStart(2, '0');
+            const minutos = String(dataObj.getMinutes()).padStart(2, '0');
             return `${horas}:${minutos}`;
         } catch(e) {
             return '00:00';

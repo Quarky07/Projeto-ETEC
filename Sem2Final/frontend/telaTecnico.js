@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         adicionarCliqueFora(modalConfirmarSaida, fecharModalSaida);
         
-        // --- Modal Adicionar Item Estoque (ATUALIZADO - Etapa 1 / Tarefa 2) ---
+        // --- Modal Adicionar Item Estoque ---
         const itemModal = document.getElementById("itemModal");
         const btnAdicionar = document.getElementById("abrirModalItemBtn");
         const btnFechar = document.getElementById("fecharModalItemBtn");
@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        // --- Modal Analisar Agendamento (ATUALIZADO - Tarefa 4) ---
+        // --- Modal Analisar Agendamento ---
         const analisarModal = document.getElementById("analisarModal");
         const btnFecharAnalisar = document.getElementById("fecharModalAnalisarBtn");
         const btnConfirmarAnalise = document.getElementById("btnConfirmarAnalise");
@@ -345,6 +345,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     formPreparo.reportValidity();
                     // Restaura apenas o texto do botão, mantém desabilitado até o finally
                     btnTarget.innerHTML = originalText;
+                    // Reativa os botões
+                    btnTarget.disabled = false;
+                    btnOpposite.disabled = false;
                     return;
                 }
                 
@@ -609,8 +612,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!dataString) return 'N/A';
         try {
             const dataObj = new Date(dataString);
-            const dia = String(dataObj.getUTCDate()).padStart(2, '0');
-            const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0');
+            const dia = String(dataObj.getDate()).padStart(2, '0');
+            const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
             const ano = dataObj.getUTCFullYear();
             return `${dia}/${mes}/${ano}`;
         } catch(e) {
@@ -623,8 +626,8 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const dataObj = new Date(dataString);
             // Usando UTC para evitar problemas de fuso horário
-            const horas = String(dataObj.getUTCHours()).padStart(2, '0');
-            const minutos = String(dataObj.getUTCMinutes()).padStart(2, '0');
+            const horas = String(dataObj.getHours()).padStart(2, '0');
+            const minutos = String(dataObj.getMinutes()).padStart(2, '0');
             return `${horas}:${minutos}`;
         } catch(e) {
             return '00:00';

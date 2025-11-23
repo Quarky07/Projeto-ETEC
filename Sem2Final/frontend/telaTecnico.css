@@ -622,11 +622,14 @@ body.tritanopia {
 }
 
 #btnDesfazerEstoque {
-  color: black;
-  border-color: #43545c;
+  color: #212529; /* Dark text for readability */
+  background-color: #ffc107; /* Bootstrap warning color (solid) */
+  border-color: #ffc107;
+  font-weight: 500;
 }
 
 #btnDesfazerEstoque:hover {
-  background-color: #43545c;
-  color: whitesmoke;
+  background-color: #e0a800; /* Darker yellow on hover */
+  border-color: #d39e00;
+  color: #212529;
 }

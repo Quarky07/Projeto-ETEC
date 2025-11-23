@@ -105,12 +105,11 @@ document.addEventListener('DOMContentLoaded', function () {
             appState.usuarios = usuarios;
             appState.materiais = materiais;
 
-            // Renderizar tudo
             renderDashboard();
             renderAgendamentos();
             renderUsuarios();
             renderEstoque();
-            renderEstatisticas(); // Corrigido o problema do callback
+            renderEstatisticas();
 
         } catch (error) {
             console.error("Erro ao carregar dados:", error);
@@ -201,6 +200,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td data-label="Tipo">${item.tipo_material}</td>
                 <td data-label="Quantidade" class="text-center mobile-center">${item.quantidade} ${item.unidade}</td>
                 <td data-label="Localização">${item.localizacao || 'N/A'}</td>
+                <td data-label="Ações" class="text-center acoes-cell">
+                    <button class="btn btn-sm btn-outline-danger mx-1 btn-remover-material" data-id="${item.id}">Excluir</button>
+                </td>
             </tr>
         `).join('');
     }
@@ -520,7 +522,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const originalText = target.innerHTML;
 
-            // TODO: Adicionar modal de confirmação "Tem certeza?"
             target.disabled = true;
             target.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Removendo...';
 
@@ -532,6 +533,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 location.reload();
             } catch (error) {
                 showAlert(error.message, 'Erro ao remover', 'error');
+            } finally {
+                target.disabled = false;
+                target.innerHTML = originalText;
+            }
+        });
+
+        // Ações na Tabela de Estoque (Excluir Material)
+        document.getElementById('lista-estoque-tbody').addEventListener('click', async (e) => {
+            const target = e.target;
+            const id = target.dataset.id;
+            if (!id || !target.classList.contains('btn-remover-material')) return;
+
+            const originalText = target.innerHTML;
+
+            target.disabled = true;
+            target.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Excluindo...';
+
+            try {
+                await fetchComToken(`${API_URL}/materiais/${id}`, {
+                    method: 'DELETE'
+                });
+                showAlert('Item excluído com sucesso.', 'Sucesso', 'success');
+                location.reload();
+            } catch (error) {
+                showAlert(error.message, 'Erro ao excluir', 'error');
             } finally {
                 target.disabled = false;
                 target.innerHTML = originalText;
@@ -639,9 +665,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!dataString) return 'N/A';
         try {
             const dataObj = new Date(dataString);
-            // Usando UTC para evitar problemas de fuso horário
-            const dia = String(dataObj.getUTCDate()).padStart(2, '0');
-            const mes = String(dataObj.getUTCMonth() + 1).padStart(2, '0');
+            const dia = String(dataObj.getDate()).padStart(2, '0');
+            const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
             const ano = dataObj.getUTCFullYear();
             return `${dia}/${mes}/${ano}`;
         } catch (e) {
@@ -653,9 +678,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!dataString) return 'N/A';
         try {
             const dataObj = new Date(dataString);
-            // Usando UTC para evitar problemas de fuso horário
-            const horas = String(dataObj.getUTCHours()).padStart(2, '0');
-            const minutos = String(dataObj.getUTCMinutes()).padStart(2, '0');
+            const horas = String(dataObj.getHours()).padStart(2, '0');
+            const minutos = String(dataObj.getMinutes()).padStart(2, '0');
             return `${horas}:${minutos}`;
         } catch (e) {
             return '00:00';
